@@ -1,12 +1,594 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abongile</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busamed Bloemfontein | Paperless Hospital Demo</title>
+  <style>
+    :root {
+      --bg: #f3f7fc;
+      --card: #ffffff;
+      --border: #d7e3f3;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #155fd0;
+      --primary-dark: #124ca6;
+      --ok-bg: #ecfdf3;
+      --ok-text: #05603a;
+      --chip: #e8f1ff;
+      --shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+    }
+
+    * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+
+    header {
+      background: linear-gradient(120deg, #12356f, #155fd0);
+      color: #fff;
+      padding: 1.3rem 1rem;
+    }
+
+    h1 { margin: 0; font-size: 1.45rem; }
+    header p { margin: 0.35rem 0 0; opacity: 0.95; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      align-items: start;
+    }
+
+    .panel, .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 0.95rem;
+    }
+
+    .panel h2, .card h2 { margin: 0 0 0.7rem; font-size: 1.05rem; }
+
+    .nav-list { display: grid; gap: 0.5rem; }
+
+    .nav-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: #f8fbff;
+      color: var(--text);
+      border-radius: 9px;
+      padding: 0.62rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-button.active, .nav-button:hover {
+      background: #e9f2ff;
+      border-color: #bad3fb;
+    }
+
+    .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .chip { background: var(--chip); color: #1e429f; padding: 0.22rem 0.58rem; border-radius: 999px; font-size: 0.78rem; }
+
+    .content { display: grid; gap: 1rem; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .kpi {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      background: #f8fbff;
+    }
+
+    .kpi small { color: var(--muted); display: block; }
+    .kpi strong { display: block; font-size: 1.3rem; color: #0b4fbb; margin-top: 0.2rem; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 0.6rem 0 0.28rem;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.58rem;
+      font-size: 0.93rem;
+    }
+
+    textarea { min-height: 84px; resize: vertical; }
+
+    button {
+      margin-top: 0.8rem;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover { background: var(--primary-dark); }
+
+    .result {
+      margin-top: 0.75rem;
+      display: none;
+      border: 1px solid #bdeecf;
+      background: var(--ok-bg);
+      color: var(--ok-text);
+      padding: 0.62rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 0.55rem; }
+    .table th, .table td { border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; padding: 0.52rem; }
+
+    .muted { color: var(--muted); font-size: 0.86rem; }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-    Jiust vsomething
+  <header>
+    <h1>Busamed Bloemfontein - Paperless Hospital System (Demo)</h1>
+    <p>Onboarding, paperless consent, prescriptions, nurse escalations, ward visibility, and digital sick notes with simulated email delivery.</p>
+  </header>
+
+  <main class="layout">
+    <aside class="panel">
+      <h2>Workflow Menu</h2>
+      <div id="navList" class="nav-list"></div>
+      <h2 style="margin-top: 1rem;">Roles</h2>
+      <div class="chips">
+        <span class="chip">Administrator</span>
+        <span class="chip">Doctor</span>
+        <span class="chip">Nurse</span>
+      </div>
+      <p class="muted" style="margin-top: 0.7rem;">Demo mode: emails are simulated and shown in Email Outbox.</p>
+    </aside>
+
+    <section id="content" class="content"></section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "busamed-paperless-demo-v2";
+
+    const seed = {
+      doctors: [
+        { id: "d1", name: "Dr. L. Mokoena", ward: "Surgical" },
+        { id: "d2", name: "Dr. K. Naidoo", ward: "Maternity" },
+        { id: "d3", name: "Dr. J. Jacobs", ward: "Emergency" },
+        { id: "d4", name: "Dr. S. Dlamini", ward: "ICU" }
+      ],
+      patients: [
+        { id: "p1", name: "Thabo Molefe", age: 44, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
+        { id: "p2", name: "Ayanda Sithole", age: 29, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
+        { id: "p3", name: "Noluthando Dube", age: 31, ward: "Maternity", doctorId: "d2", consentSigned: true, consentType: "Digital Signature" }
+      ],
+      prescriptions: [],
+      issues: [],
+      sickNotes: [],
+      emails: []
+    };
+
+    const views = [
+      { id: "dashboard", label: "Hospital Dashboard" },
+      { id: "onboarding", label: "Admin: Onboard Patient" },
+      { id: "prescriptions", label: "Doctor: Prescribe Pills" },
+      { id: "issues", label: "Nurse: Log Patient Issues" },
+      { id: "wards", label: "Ward Doctor + Patients" },
+      { id: "sicknotes", label: "Doctor: Sick Notes" },
+      { id: "outbox", label: "Email Outbox" }
+    ];
+
+    let state = loadState();
+    let activeView = "dashboard";
+
+    const navList = document.getElementById("navList");
+    const content = document.getElementById("content");
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : structuredClone(seed);
+      } catch {
+        return structuredClone(seed);
+      }
+    }
+
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetDemoData() {
+      state = structuredClone(seed);
+      persist();
+      render();
+    }
+
+    function doctorById(id) { return state.doctors.find((d) => d.id === id); }
+    function patientById(id) { return state.patients.find((p) => p.id === id); }
+
+    function patientOptions() {
+      return state.patients.map((p) => `<option value="${p.id}">${p.name} - ${p.ward}</option>`).join("");
+    }
+
+    function doctorOptions(ward) {
+      return state.doctors
+        .filter((d) => !ward || d.ward === ward)
+        .map((d) => `<option value="${d.id}">${d.name} (${d.ward})</option>`)
+        .join("");
+    }
+
+    function queueEmail({ to, subject, body, tag }) {
+      state.emails.unshift({
+        id: `e${Date.now()}`,
+        to,
+        subject,
+        body,
+        tag,
+        sentAt: new Date().toLocaleString()
+      });
+      persist();
+    }
+
+    function renderNav() {
+      navList.innerHTML = "";
+      views.forEach((view) => {
+        const btn = document.createElement("button");
+        btn.className = `nav-button ${activeView === view.id ? "active" : ""}`;
+        btn.textContent = view.label;
+        btn.onclick = () => {
+          activeView = view.id;
+          render();
+        };
+        navList.appendChild(btn);
+      });
+    }
+
+    function dashboardView() {
+      const paperlessRate = state.patients.length
+        ? Math.round((state.patients.filter((p) => p.consentSigned).length / state.patients.length) * 100)
+        : 0;
+      return `
+      <article class="card">
+        <h2>Paperless Performance Snapshot</h2>
+        <div class="kpi-grid">
+          <div class="kpi"><small>Patients</small><strong>${state.patients.length}</strong></div>
+          <div class="kpi"><small>Consent Signed</small><strong>${paperlessRate}%</strong></div>
+          <div class="kpi"><small>Prescriptions</small><strong>${state.prescriptions.length}</strong></div>
+          <div class="kpi"><small>Emails Sent</small><strong>${state.emails.length}</strong></div>
+        </div>
+        <p class="muted" style="margin-top:0.65rem;">Designed to reduce paperwork across all wards in one hospital-wide workflow.</p>
+        <button id="resetBtn" type="button">Reset Demo Data</button>
+      </article>
+      <article class="card">
+        <h2>Current Patient Register</h2>
+        <table class="table">
+          <thead><tr><th>Patient</th><th>Ward</th><th>Doctor</th><th>Consent</th></tr></thead>
+          <tbody>
+            ${state.patients.map((p) => `<tr><td>${p.name} (Age ${p.age})</td><td>${p.ward}</td><td>${doctorById(p.doctorId)?.name || "Unassigned"}</td><td>${p.consentSigned ? "Signed" : "Pending"}</td></tr>`).join("")}
+          </tbody>
+        </table>
+      </article>`;
+    }
+
+    function onboardingView() {
+      return `
+      <article class="card">
+        <h2>Administrator Onboarding (No Paper Forms)</h2>
+        <form id="onboardForm">
+          <label>Patient full name</label>
+          <input required name="name" placeholder="e.g. Lerato Motaung" />
+
+          <label>Age</label>
+          <input required type="number" min="0" max="120" name="age" />
+
+          <label>Ward</label>
+          <select required name="ward" id="onboardWard">
+            <option value="">Select ward</option>
+            <option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option>
+          </select>
+
+          <label>Assign doctor</label>
+          <select required name="doctorId" id="onboardDoctor"><option value="">Select doctor</option></select>
+
+          <label>Patient email</label>
+          <input required type="email" name="email" placeholder="patient@email.com" />
+
+          <label>Consent capture (paperless signature)</label>
+          <input required name="signature" placeholder="Type patient's full name as digital signature" />
+
+          <button type="submit">Create Patient & Send Welcome Email</button>
+          <div id="onboardResult" class="result"></div>
+        </form>
+      </article>`;
+    }
+
+    function prescriptionView() {
+      return `
+      <article class="card">
+        <h2>Doctor Prescription (Pills) -> Nurse Email</h2>
+        <form id="rxForm">
+          <label>Patient</label>
+          <select required name="patientId">${patientOptions()}</select>
+
+          <label>Medication / Pills</label>
+          <input required name="medication" placeholder="e.g. Amoxicillin 500mg capsules" />
+
+          <label>Dosage</label>
+          <textarea required name="dosage" placeholder="1 capsule every 8 hours for 5 days"></textarea>
+
+          <label>Nurse email</label>
+          <input required type="email" name="nurseEmail" placeholder="nurse.surgical@busamed.demo" />
+
+          <button type="submit">Send Prescription</button>
+          <div id="rxResult" class="result"></div>
+        </form>
+      </article>`;
+    }
+
+    function issuesView() {
+      return `
+      <article class="card">
+        <h2>Nurse Issues & Escalation</h2>
+        <form id="issueForm">
+          <label>Patient</label>
+          <select required name="patientId">${patientOptions()}</select>
+
+          <label>Severity</label>
+          <select required name="severity"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
+
+          <label>Send to relevant person/team</label>
+          <input required name="recipient" placeholder="e.g. Surgical Lead / Dr. Mokoena" />
+
+          <label>Recipient email</label>
+          <input required type="email" name="recipientEmail" placeholder="recipient@busamed.demo" />
+
+          <label>Issue details</label>
+          <textarea required name="details" placeholder="Describe concern"></textarea>
+
+          <button type="submit">Escalate Issue</button>
+          <div id="issueResult" class="result"></div>
+        </form>
+      </article>`;
+    }
+
+    function wardsView() {
+      return `
+      <article class="card">
+        <h2>Ward Allocation View</h2>
+        <label>Select ward</label>
+        <select id="wardFilter"><option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option></select>
+        <div id="wardTableWrap"></div>
+      </article>`;
+    }
+
+    function sickNotesView() {
+      return `
+      <article class="card">
+        <h2>Doctor Sick Notes Upload + Email Patient</h2>
+        <form id="sickForm">
+          <label>Patient</label>
+          <select required name="patientId">${patientOptions()}</select>
+
+          <label>Patient email</label>
+          <input required type="email" name="patientEmail" placeholder="patient@email.com" />
+
+          <label>Sick note file</label>
+          <input required type="file" name="file" accept=".pdf,.jpg,.png,.doc,.docx" />
+
+          <label>Doctor message</label>
+          <textarea required name="message" placeholder="Recovery advice and return date"></textarea>
+
+          <button type="submit">Upload & Send Sick Note</button>
+          <div id="sickResult" class="result"></div>
+        </form>
+      </article>`;
+    }
+
+    function outboxView() {
+      return `
+      <article class="card">
+        <h2>Email Outbox (Simulated)</h2>
+        <table class="table">
+          <thead><tr><th>Time</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
+          <tbody>
+            ${state.emails.length ? state.emails.map((e) => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.tag}</td><td>${e.subject}</td></tr>`).join("") : `<tr><td colspan="4">No emails sent yet.</td></tr>`}
+          </tbody>
+        </table>
+      </article>`;
+    }
+
+    function renderWardTable(ward) {
+      const doctors = state.doctors.filter((d) => d.ward === ward);
+      const rows = doctors.map((doc) => {
+        const pts = state.patients.filter((p) => p.doctorId === doc.id);
+        return `<tr><td>${doc.name}</td><td>${doc.ward}</td><td>${pts.length ? pts.map((p) => `${p.name} (Age ${p.age})`).join("<br>") : "No patients"}</td></tr>`;
+      }).join("");
+      document.getElementById("wardTableWrap").innerHTML = `
+        <table class="table">
+          <thead><tr><th>Doctor</th><th>Ward</th><th>Assigned patients</th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="3">No doctors in this ward.</td></tr>`}</tbody>
+        </table>`;
+    }
+
+    function bindDashboard() {
+      document.getElementById("resetBtn").onclick = resetDemoData;
+    }
+
+    function bindOnboarding() {
+      const ward = document.getElementById("onboardWard");
+      const doctor = document.getElementById("onboardDoctor");
+      const form = document.getElementById("onboardForm");
+      const result = document.getElementById("onboardResult");
+
+      ward.onchange = () => {
+        doctor.innerHTML = `<option value="">Select doctor</option>${doctorOptions(ward.value)}`;
+      };
+
+      form.onsubmit = (ev) => {
+        ev.preventDefault();
+        const data = new FormData(form);
+        const patient = {
+          id: `p${Date.now()}`,
+          name: data.get("name"),
+          age: Number(data.get("age")),
+          ward: data.get("ward"),
+          doctorId: data.get("doctorId"),
+          consentSigned: true,
+          consentType: "Digital Signature"
+        };
+        state.patients.push(patient);
+
+        const email = data.get("email");
+        queueEmail({
+          to: email,
+          tag: "Welcome",
+          subject: "Busamed admission confirmation",
+          body: `Welcome ${patient.name}. Your paperless consent is captured.`
+        });
+
+        persist();
+        result.style.display = "block";
+        result.textContent = `${patient.name} onboarded paperlessly and welcome email sent to ${email}.`;
+        form.reset();
+        doctor.innerHTML = `<option value="">Select doctor</option>`;
+      };
+    }
+
+    function bindPrescription() {
+      const form = document.getElementById("rxForm");
+      const result = document.getElementById("rxResult");
+      form.onsubmit = (ev) => {
+        ev.preventDefault();
+        const data = new FormData(form);
+        const patient = patientById(data.get("patientId"));
+        const record = {
+          id: `rx${Date.now()}`,
+          patientId: data.get("patientId"),
+          medication: data.get("medication"),
+          dosage: data.get("dosage"),
+          nurseEmail: data.get("nurseEmail")
+        };
+        state.prescriptions.push(record);
+        queueEmail({
+          to: record.nurseEmail,
+          tag: "Prescription",
+          subject: `Medication order for ${patient?.name || "patient"}`,
+          body: `${record.medication} - ${record.dosage}`
+        });
+        persist();
+        result.style.display = "block";
+        result.textContent = `Prescription sent to ${record.nurseEmail} for ${patient?.name || "patient"}.`;
+        form.reset();
+      };
+    }
+
+    function bindIssues() {
+      const form = document.getElementById("issueForm");
+      const result = document.getElementById("issueResult");
+      form.onsubmit = (ev) => {
+        ev.preventDefault();
+        const data = new FormData(form);
+        const issue = {
+          id: `is${Date.now()}`,
+          patientId: data.get("patientId"),
+          severity: data.get("severity"),
+          recipient: data.get("recipient"),
+          details: data.get("details")
+        };
+        state.issues.push(issue);
+        queueEmail({
+          to: data.get("recipientEmail"),
+          tag: "Escalation",
+          subject: `Patient issue (${issue.severity})`,
+          body: issue.details
+        });
+        persist();
+        result.style.display = "block";
+        result.textContent = `Issue escalated to ${data.get("recipient")} and email sent.`;
+        form.reset();
+      };
+    }
+
+    function bindWards() {
+      const ward = document.getElementById("wardFilter");
+      renderWardTable(ward.value);
+      ward.onchange = () => renderWardTable(ward.value);
+    }
+
+    function bindSickNotes() {
+      const form = document.getElementById("sickForm");
+      const result = document.getElementById("sickResult");
+      form.onsubmit = (ev) => {
+        ev.preventDefault();
+        const data = new FormData(form);
+        const file = data.get("file");
+        const patient = patientById(data.get("patientId"));
+        state.sickNotes.push({
+          id: `sn${Date.now()}`,
+          patientId: data.get("patientId"),
+          fileName: file?.name || "unknown",
+          patientEmail: data.get("patientEmail"),
+          message: data.get("message")
+        });
+        queueEmail({
+          to: data.get("patientEmail"),
+          tag: "Sick Note",
+          subject: `Sick note from ${doctorById(patient?.doctorId)?.name || "doctor"}`,
+          body: `${data.get("message")} (Attachment: ${file?.name || "file"})`
+        });
+        persist();
+        result.style.display = "block";
+        result.textContent = `Sick note uploaded and emailed to ${data.get("patientEmail")}.`;
+        form.reset();
+      };
+    }
+
+    function render() {
+      renderNav();
+      if (activeView === "dashboard") {
+        content.innerHTML = dashboardView();
+        bindDashboard();
+      } else if (activeView === "onboarding") {
+        content.innerHTML = onboardingView();
+        bindOnboarding();
+      } else if (activeView === "prescriptions") {
+        content.innerHTML = prescriptionView();
+        bindPrescription();
+      } else if (activeView === "issues") {
+        content.innerHTML = issuesView();
+        bindIssues();
+      } else if (activeView === "wards") {
+        content.innerHTML = wardsView();
+        bindWards();
+      } else if (activeView === "sicknotes") {
+        content.innerHTML = sickNotesView();
+        bindSickNotes();
+      } else if (activeView === "outbox") {
+        content.innerHTML = outboxView();
+      }
+    }
+
+    render();
+  </script>
 </body>
 </html>
