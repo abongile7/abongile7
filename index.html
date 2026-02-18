@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Busamed CareFlow - Secure Remote Hospital Demo</title>
+  <title>Busamed Bloemfontein CareFlow Portal</title>
   <style>
     :root {
       --bg: #f3f7fd;
-      --card: #ffffff;
-      --line: #d8e4f6;
-      --primary: #1258c3;
-      --primary-2: #0c469f;
+      --card: #fff;
+      --line: #d5e2f5;
       --text: #1f2937;
       --muted: #667085;
-      --ok: #05603a;
+      --primary: #1258c3;
+      --primary-2: #0f4595;
       --ok-bg: #ecfdf3;
-      --warn: #92400e;
+      --ok: #05603a;
       --warn-bg: #fff7e8;
-      --danger: #991b1b;
+      --warn: #92400e;
       --danger-bg: #fee2e2;
+      --danger: #991b1b;
       --critical: #b91c1c;
       --high: #ea580c;
       --medium: #ca8a04;
@@ -26,23 +26,21 @@
     }
 
     * { box-sizing: border-box; font-family: Inter, Segoe UI, Arial, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--text); }
-
+    body { margin: 0; color: var(--text); background: var(--bg); }
     header {
-      background: linear-gradient(120deg, #0f3d84, #1258c3);
-      color: #fff;
+      background: linear-gradient(120deg, #0e3978, #1258c3);
+      color: white;
       padding: 1rem 1.2rem;
       position: sticky;
       top: 0;
-      z-index: 2;
+      z-index: 5;
     }
-
-    h1 { margin: 0; font-size: 1.3rem; }
-    header p { margin: .35rem 0 0; opacity: .92; }
+    h1 { margin: 0; font-size: 1.25rem; }
+    header p { margin: .32rem 0 0; opacity: .92; }
 
     .layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 360px 1fr;
       gap: 1rem;
       align-items: start;
       padding: 1rem;
@@ -53,85 +51,70 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: .95rem;
-      box-shadow: 0 4px 14px rgba(15,23,42,.06);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, .06);
     }
 
-    .panel h2, .card h2, .card h3 { margin: 0 0 .7rem; }
     .stack { display: grid; gap: .8rem; }
+    .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
 
-    label { display: block; margin: .55rem 0 .24rem; font-size: .87rem; font-weight: 600; }
+    label { display: block; font-size: .86rem; margin: .5rem 0 .23rem; font-weight: 600; }
     input, select, textarea, button {
       width: 100%; border-radius: 9px; border: 1px solid var(--line);
-      padding: .56rem; font-size: .92rem;
+      padding: .55rem; font-size: .91rem;
     }
-    textarea { min-height: 82px; resize: vertical; }
+    textarea { min-height: 80px; resize: vertical; }
 
-    button {
-      background: var(--primary); color: #fff; border: none; cursor: pointer; font-weight: 700;
-    }
+    button { background: var(--primary); color: #fff; font-weight: 700; border: none; cursor: pointer; }
     button:hover { background: var(--primary-2); }
-
-    .btn-secondary {
-      background: #eef4ff; color: #1f4ea2; border: 1px solid #c6d7f8;
-    }
+    .btn-secondary { background: #eef4ff; color: #214c9b; border: 1px solid #c5d7f8; }
 
     .tabs { display: grid; gap: .45rem; }
-    .tabs button.active { background: var(--primary-2); }
-
-    .muted { color: var(--muted); font-size: .86rem; }
+    .tabs .active { background: var(--primary-2); }
 
     .kpis {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: .6rem;
     }
-
     .kpi {
+      background: #f8fbff;
       border: 1px solid var(--line);
       border-radius: 10px;
-      background: #f8fbff;
       padding: .62rem;
     }
-    .kpi small { display: block; color: var(--muted); }
-    .kpi strong { color: #124fb3; font-size: 1.2rem; }
+    .kpi small { color: var(--muted); display: block; }
+    .kpi strong { color: #114cae; font-size: 1.2rem; }
 
-    .grid2 {
-      display: grid;
-      gap: .9rem;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    }
+    .grid2 { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 
     table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: .4rem; }
-    th, td { text-align: left; border-bottom: 1px solid var(--line); padding: .44rem; vertical-align: top; }
+    th, td { text-align: left; border-bottom: 1px solid var(--line); padding: .45rem; vertical-align: top; }
 
-    .msg { display: none; border-radius: 8px; margin-top: .6rem; padding: .52rem; font-size: .9rem; }
+    .msg { display: none; border-radius: 8px; padding: .5rem; margin-top: .6rem; font-size: .9rem; }
     .ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #bde8cb; }
-    .warn { background: var(--warn-bg); color: var(--warn); border: 1px solid #f1d5aa; }
-    .danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #f5bcbc; }
+    .warn { background: var(--warn-bg); color: var(--warn); border: 1px solid #f0d6ad; }
+    .danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #f2b8b8; }
 
     .badge {
       display: inline-block;
       border-radius: 999px;
-      padding: .18rem .55rem;
-      font-size: .76rem;
-      font-weight: 700;
+      padding: .17rem .53rem;
       color: #fff;
+      font-size: .74rem;
+      font-weight: 700;
     }
     .critical { background: var(--critical); }
     .high { background: var(--high); }
     .medium { background: var(--medium); }
     .low { background: var(--low); }
 
-    .toprow {
-      display: flex; justify-content: space-between; align-items: center; gap: .6rem;
-      flex-wrap: wrap;
-    }
-
-    .session {
-      border: 1px dashed #c6d7f8;
-      border-radius: 9px;
-      padding: .55rem;
+    .muted { color: var(--muted); font-size: .85rem; }
+    .session-box {
+      border: 1px dashed #c2d4f6;
+      border-radius: 10px;
       background: #f8fbff;
+      padding: .6rem;
+      font-size: .86rem;
     }
 
     @media (max-width: 980px) {
@@ -142,45 +125,45 @@
 </head>
 <body>
   <header>
-    <div class="toprow">
+    <div class="row" style="justify-content: space-between;">
       <div>
-        <h1>Busamed CareFlow | Secure Paperless Demo</h1>
-        <p>Role-based access for administrators, doctors, and nurses with remote-friendly workflows.</p>
+        <h1>Busamed Bloemfontein CareFlow Portal</h1>
+        <p>Digital casualty, admission, ward nursing, and virtual follow-up workflows for modern paperless care.</p>
       </div>
-      <div class="muted" id="nowTime"></div>
+      <div id="clock" class="muted" style="color:#e2edff;"></div>
     </div>
   </header>
 
   <main class="layout">
     <aside class="panel stack">
       <section>
-        <h2>Secure Demo Login</h2>
-        <p class="muted">Use one of these dummy users for your demo:</p>
-        <div class="session">
-          <div><strong>Administrator:</strong> <code>admin@busamed.demo</code> / <code>Admin@123</code></div>
-          <div><strong>Doctor:</strong> <code>doctor@busamed.demo</code> / <code>Doctor@123</code></div>
-          <div><strong>Nurse:</strong> <code>nurse@busamed.demo</code> / <code>Nurse@123</code></div>
-          <div><strong>OTP:</strong> <code>123456</code> (demo only)</div>
+        <h2 style="margin:0 0 .55rem;">Secure Login (Demo)</h2>
+        <div class="session-box">
+          <div><strong>Admin</strong>: admin@busamed.demo / Admin@123</div>
+          <div><strong>Casualty Doctor</strong>: doctor@busamed.demo / Doctor@123</div>
+          <div><strong>Ward Nurse</strong>: nurse@busamed.demo / Nurse@123</div>
+          <div><strong>Patient</strong>: patient@busamed.demo / Patient@123</div>
+          <div><strong>OTP</strong>: 123456</div>
         </div>
         <label>Email</label>
-        <input id="loginEmail" type="email" placeholder="user@busamed.demo" />
+        <input id="email" type="email" placeholder="user@busamed.demo" />
         <label>Password</label>
-        <input id="loginPassword" type="password" placeholder="Password" />
+        <input id="password" type="password" />
         <label>One-time code</label>
-        <input id="loginOtp" placeholder="6-digit OTP" />
-        <button id="loginBtn" style="margin-top:.6rem;">Sign in securely</button>
-        <button id="logoutBtn" class="btn-secondary" style="margin-top:.45rem;">Sign out</button>
+        <input id="otp" placeholder="6-digit code" />
+        <button id="loginBtn" style="margin-top:.6rem;">Login</button>
+        <button id="logoutBtn" class="btn-secondary" style="margin-top:.45rem;">Logout</button>
         <div id="loginMsg" class="msg"></div>
       </section>
 
       <section>
-        <h2>Role Navigation</h2>
+        <h2 style="margin:0 0 .55rem;">Role Tabs</h2>
         <div id="tabs" class="tabs"></div>
       </section>
 
-      <section class="session">
-        <div><strong>Session:</strong> <span id="sessionText">Not signed in</span></div>
-        <div class="muted">Data is saved locally for demo continuity and accessible from any browser location.</div>
+      <section class="session-box">
+        <div><strong>Session:</strong> <span id="sessionText">Not logged in</span></div>
+        <div class="muted">Works on desktop/laptop and tablets, with in-browser cloud-like persistence for demo.</div>
       </section>
     </aside>
 
@@ -188,304 +171,383 @@
   </main>
 
   <script>
-    const STORE_KEY = 'busamed-careflow-v4';
+    const KEY = 'busamed-careflow-v5';
+
     const users = {
-      'admin@busamed.demo': { password: 'Admin@123', role: 'administrator', name: 'Ms. N. Admin' },
-      'doctor@busamed.demo': { password: 'Doctor@123', role: 'doctor', name: 'Dr. L. Mokoena' },
-      'nurse@busamed.demo': { password: 'Nurse@123', role: 'nurse', name: 'Nurse P. Dube' }
+      'admin@busamed.demo': { password: 'Admin@123', role: 'admin', fullName: 'N. Maseko (Admissions)' },
+      'doctor@busamed.demo': { password: 'Doctor@123', role: 'doctor', fullName: 'Dr. L. Mokoena (Casualty)' },
+      'nurse@busamed.demo': { password: 'Nurse@123', role: 'nurse', fullName: 'P. Dube (Ward Nurse)' },
+      'patient@busamed.demo': { password: 'Patient@123', role: 'patient', fullName: 'T. Molefe (Patient)' }
     };
 
     const tabsByRole = {
-      administrator: [
-        { id: 'adminOverview', label: 'Admin Control Center' },
-        { id: 'admit', label: 'Admit Patient' },
-        { id: 'discharge', label: 'Discharge + Feedback' },
-        { id: 'outbox', label: 'Communication Outbox' }
+      admin: [
+        { id: 'adminDashboard', label: 'Admissions Dashboard' },
+        { id: 'openFile', label: 'Open Patient File' },
+        { id: 'assignCasualty', label: 'Assign Casualty Doctor' },
+        { id: 'admissionsDesk', label: 'Admit / Discharge Desk' },
+        { id: 'outbox', label: 'Notification Outbox' }
       ],
       doctor: [
-        { id: 'doctorOverview', label: 'Doctor Dashboard' },
-        { id: 'files', label: 'Patient Files + Uploads' },
-        { id: 'rx', label: 'Prescriptions' },
-        { id: 'outbox', label: 'Communication Outbox' }
+        { id: 'doctorDashboard', label: 'Casualty Queue' },
+        { id: 'doctorAssessment', label: 'Casualty Assessment Form' },
+        { id: 'doctorDecision', label: 'Home vs Admit Decision' },
+        { id: 'doctorDocs', label: 'Medical Documents' },
+        { id: 'outbox', label: 'Notification Outbox' }
       ],
       nurse: [
-        { id: 'nurseOverview', label: 'Nurse Station' },
-        { id: 'vitals', label: 'Vitals + BP Monitoring' },
-        { id: 'meds', label: 'Medication Administration' },
-        { id: 'outbox', label: 'Communication Outbox' }
+        { id: 'nurseDashboard', label: 'Ward Dashboard' },
+        { id: 'wardIntake', label: 'Ward Intake Form' },
+        { id: 'vitalsIssues', label: 'Vitals and Issues Log' },
+        { id: 'medAdmin', label: 'Medication Checklist' },
+        { id: 'outbox', label: 'Notification Outbox' }
+      ],
+      patient: [
+        { id: 'patientHome', label: 'My Discharge Summary' },
+        { id: 'patientTicket', label: 'Log Post-Discharge Ticket' }
       ]
     };
 
     const seed = {
-      auth: { email: '', role: '', name: '', loggedIn: false, lastLogin: '' },
+      auth: { loggedIn: false, email: '', role: '', name: '', lastLogin: '' },
       doctors: [
-        { id: 'd1', name: 'Dr. L. Mokoena', ward: 'Surgical' },
-        { id: 'd2', name: 'Dr. K. Naidoo', ward: 'ICU' }
+        { id: 'd1', name: 'Dr. L. Mokoena', ward: 'Casualty', email: 'doctor@busamed.demo' },
+        { id: 'd2', name: 'Dr. K. Naidoo', ward: 'Surgical', email: 'dr.naidoo@busamed.demo' }
+      ],
+      nurses: [
+        { id: 'n1', name: 'Nurse P. Dube', ward: 'Surgical', email: 'nurse@busamed.demo' },
+        { id: 'n2', name: 'Nurse A. Jacobs', ward: 'ICU', email: 'nurse.icu@busamed.demo' }
       ],
       patients: [
         {
-          id: 'p1', fullName: 'Thabo Molefe', email: 'thabo@example.com', phone: '0820001111', idNumber: '8501015009088',
-          ward: 'Surgical', doctorId: 'd1', admittedAt: '2026-02-17 08:30', status: 'admitted',
-          emergencyContact: 'Lerato Molefe - 0829990000', allergies: 'None', diagnosis: 'Post-op recovery',
-          criticality: 'high', consentSigned: true, welcomeSent: true,
-          docs: [],
+          id: 'p1', fullName: 'Thabo Molefe', idNumber: '8501015009088', phone: '0820001111', email: 'patient@busamed.demo',
+          address: '12 Nelson Street, Bloemfontein', medicalAidScheme: 'Discovery Health', medicalAidNumber: 'DH8391022',
+          emergencyContact: 'Lerato Molefe - 0829990000', nextOfKin: 'Lerato Molefe',
+          presentingComplaint: 'Chest discomfort and dizziness', triageCategory: 'high',
+          casualtyDoctorId: 'd1', ward: 'Surgical', admitted: true, status: 'admitted',
+          diagnosis: 'Hypertension with monitoring required',
           prescriptions: [
-            { id: 'rx1', medication: 'Amlodipine 5mg', instruction: '1 tablet after breakfast', schedule: '08:00', createdAt: '2026-02-17 09:00' }
+            { id: 'rx1', medication: 'Amlodipine 5mg', instruction: '1 tablet after breakfast', schedule: '08:00', createdAt: '2026-02-17 09:20' }
           ],
-          vitals: [
-            { time: '2026-02-17T10:00', bloodPressure: '150/96', result: 'High blood pressure, monitor in 4 hours' }
-          ],
+          assessments: [],
+          nurseIntake: null,
+          vitals: [],
+          issues: [],
+          docs: [],
           medLogs: [],
-          dischargeFeedback: null
+          discharge: null
         }
       ],
+      tickets: [],
       emails: [
-        { id: 'e1', to: 'thabo@example.com', type: 'Welcome', subject: 'Welcome to Busamed CareFlow', sentAt: '2026-02-17 08:35' }
+        { id: 'e1', to: 'doctor@busamed.demo', type: 'Assignment', subject: 'Assigned casualty patient: Thabo Molefe', sentAt: '2026-02-17 08:10' }
       ]
     };
 
     let state = load();
-    let activeTab = state.auth.loggedIn && state.auth.role ? tabsByRole[state.auth.role][0].id : '';
+    let activeTab = state.auth.loggedIn ? tabsByRole[state.auth.role][0].id : '';
 
-    const contentEl = document.getElementById('content');
     const tabsEl = document.getElementById('tabs');
-    const loginMsg = document.getElementById('loginMsg');
+    const contentEl = document.getElementById('content');
     const sessionText = document.getElementById('sessionText');
+    const loginMsg = document.getElementById('loginMsg');
 
     function load() {
       try {
-        const raw = localStorage.getItem(STORE_KEY);
+        const raw = localStorage.getItem(KEY);
         return raw ? JSON.parse(raw) : structuredClone(seed);
       } catch {
         return structuredClone(seed);
       }
     }
-
-    function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
-    function nowHuman() { return new Date().toLocaleString(); }
-
-    function doctorName(id) {
-      return state.doctors.find(d => d.id === id)?.name || 'Unassigned';
-    }
-
-    function criticalityBadge(level) {
-      const cls = level || 'low';
-      return `<span class="badge ${cls}">${cls.toUpperCase()}</span>`;
-    }
+    function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+    function now() { return new Date().toLocaleString(); }
 
     function queueEmail(to, type, subject) {
-      state.emails.unshift({ id: 'e' + Date.now(), to, type, subject, sentAt: nowHuman() });
+      state.emails.unshift({ id: 'e' + Date.now(), to, type, subject, sentAt: now() });
     }
 
-    function setMessage(el, kind, text) {
-      el.className = 'msg ' + kind;
+    function badge(level) {
+      const c = level || 'low';
+      return `<span class="badge ${c}">${c.toUpperCase()}</span>`;
+    }
+
+    function setMsg(el, kind, txt) {
+      el.className = `msg ${kind}`;
       el.style.display = 'block';
-      el.textContent = text;
-    }
-
-    function signIn() {
-      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      const password = document.getElementById('loginPassword').value;
-      const otp = document.getElementById('loginOtp').value.trim();
-      const user = users[email];
-
-      if (!user || user.password !== password || otp !== '123456') {
-        setMessage(loginMsg, 'danger', 'Login failed. Check demo credentials and OTP 123456.');
-        return;
-      }
-
-      state.auth = {
-        email,
-        role: user.role,
-        name: user.name,
-        loggedIn: true,
-        lastLogin: nowHuman()
-      };
-      activeTab = tabsByRole[user.role][0].id;
-      save();
-      setMessage(loginMsg, 'ok', `Welcome ${user.name}. Secure session started.`);
-      render();
-    }
-
-    function signOut() {
-      state.auth = { email: '', role: '', name: '', loggedIn: false, lastLogin: '' };
-      activeTab = '';
-      save();
-      setMessage(loginMsg, 'warn', 'Signed out successfully.');
-      render();
+      el.textContent = txt;
     }
 
     function patientOptions(filter = null) {
       const list = filter ? state.patients.filter(filter) : state.patients;
-      return list.map(p => `<option value="${p.id}">${p.fullName} - ${p.ward} - ${p.criticality.toUpperCase()}</option>`).join('');
+      return list.map(p => `<option value="${p.id}">${p.fullName} - ${p.ward || 'No ward'} - ${p.status}</option>`).join('');
+    }
+
+    function doctorName(id) { return state.doctors.find(d => d.id === id)?.name || 'Unassigned'; }
+
+    function signIn() {
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const otp = document.getElementById('otp').value.trim();
+      const u = users[email];
+
+      if (!u || u.password !== password || otp !== '123456') {
+        setMsg(loginMsg, 'danger', 'Login failed. Check email/password and OTP 123456.');
+        return;
+      }
+
+      state.auth = { loggedIn: true, email, role: u.role, name: u.fullName, lastLogin: now() };
+      activeTab = tabsByRole[u.role][0].id;
+      save();
+      setMsg(loginMsg, 'ok', `Welcome ${u.fullName}. Your secure session has started.`);
+      render();
+    }
+
+    function signOut() {
+      state.auth = { loggedIn: false, email: '', role: '', name: '', lastLogin: '' };
+      activeTab = '';
+      save();
+      setMsg(loginMsg, 'warn', 'Signed out.');
+      render();
     }
 
     function renderTabs() {
       tabsEl.innerHTML = '';
       if (!state.auth.loggedIn) return;
-      tabsByRole[state.auth.role].forEach(tab => {
-        const btn = document.createElement('button');
-        btn.textContent = tab.label;
-        btn.className = activeTab === tab.id ? 'active' : 'btn-secondary';
-        btn.onclick = () => { activeTab = tab.id; renderContent(); renderTabs(); };
-        tabsEl.appendChild(btn);
+      tabsByRole[state.auth.role].forEach(t => {
+        const b = document.createElement('button');
+        b.textContent = t.label;
+        b.className = activeTab === t.id ? 'active' : 'btn-secondary';
+        b.onclick = () => { activeTab = t.id; renderTabs(); renderContent(); };
+        tabsEl.appendChild(b);
       });
     }
 
-    function renderAdminOverview() {
+    function renderAuthLocked() {
+      return `<article class="card"><h2>Please login</h2><p class="muted">Use dummy credentials to view the role-specific professional portal.</p></article>`;
+    }
+
+    function renderAdminDashboard() {
       const admitted = state.patients.filter(p => p.status === 'admitted').length;
       const discharged = state.patients.filter(p => p.status === 'discharged').length;
       return `
       <article class="card">
-        <h2>Administrator Control Center</h2>
+        <h2>Admissions Dashboard</h2>
         <div class="kpis">
-          <div class="kpi"><small>Total Patients</small><strong>${state.patients.length}</strong></div>
+          <div class="kpi"><small>Total files</small><strong>${state.patients.length}</strong></div>
           <div class="kpi"><small>Admitted</small><strong>${admitted}</strong></div>
           <div class="kpi"><small>Discharged</small><strong>${discharged}</strong></div>
-          <div class="kpi"><small>Emails Sent</small><strong>${state.emails.length}</strong></div>
+          <div class="kpi"><small>Notifications</small><strong>${state.emails.length}</strong></div>
         </div>
       </article>
       <article class="card">
-        <h3>Live Patient Board</h3>
+        <h3>Casualty / Admission Board</h3>
         <table>
-          <thead><tr><th>Patient</th><th>Criticality</th><th>Status</th><th>Ward</th><th>Doctor</th><th>Admitted</th></tr></thead>
-          <tbody>
-            ${state.patients.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.status}</td><td>${p.ward}</td><td>${doctorName(p.doctorId)}</td><td>${p.admittedAt}</td></tr>`).join('')}
-          </tbody>
+          <thead><tr><th>Patient</th><th>Triage</th><th>Status</th><th>Doctor</th><th>Ward</th><th>Medical Aid</th></tr></thead>
+          <tbody>${state.patients.map(p => `<tr><td>${p.fullName}</td><td>${badge(p.triageCategory)}</td><td>${p.status}</td><td>${doctorName(p.casualtyDoctorId)}</td><td>${p.ward || '-'}</td><td>${p.medicalAidScheme || '-'}</td></tr>`).join('')}</tbody>
         </table>
       </article>`;
     }
 
-    function renderAdmit() {
+    function renderOpenFile() {
       return `
       <article class="card">
-        <h2>Admit New Patient</h2>
-        <form id="admitForm">
+        <h2>Open New Patient File (Casualty)</h2>
+        <form id="openFileForm">
           <div class="grid2">
             <div>
               <label>Full Name</label><input required name="fullName" />
-              <label>ID / Passport</label><input required name="idNumber" />
+              <label>ID Number</label><input required name="idNumber" />
               <label>Email</label><input required type="email" name="email" />
               <label>Phone</label><input required name="phone" />
+              <label>Residential Address</label><textarea required name="address"></textarea>
               <label>Emergency Contact</label><input required name="emergencyContact" />
             </div>
             <div>
-              <label>Ward</label><select required name="ward"><option>Surgical</option><option>ICU</option><option>Maternity</option><option>Emergency</option></select>
-              <label>Assign Doctor</label><select required name="doctorId">${state.doctors.map(d => `<option value="${d.id}">${d.name} (${d.ward})</option>`).join('')}</select>
-              <label>Allergies</label><input name="allergies" placeholder="e.g. Penicillin" />
-              <label>Diagnosis / Admission Reason</label><textarea required name="diagnosis"></textarea>
-              <label>Criticality</label><select required name="criticality"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
-              <label>Digital Signature Consent</label><input required name="signature" placeholder="Patient full name" />
+              <label>Medical Aid Scheme</label><input required name="medicalAidScheme" />
+              <label>Medical Aid Number</label><input required name="medicalAidNumber" />
+              <label>Next of Kin</label><input required name="nextOfKin" />
+              <label>Presenting Complaint (Casualty)</label><textarea required name="presentingComplaint"></textarea>
+              <label>Triage Priority</label><select required name="triageCategory"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+              <label>Consent Signature</label><input required name="signature" placeholder="Patient full name" />
             </div>
           </div>
-          <button type="submit">Admit + Send Welcome Message</button>
-          <div id="admitMsg" class="msg ok"></div>
+          <button type="submit">Open File</button>
+          <div id="openFileMsg" class="msg ok"></div>
         </form>
       </article>`;
     }
 
-    function renderDischarge() {
+    function renderAssignCasualty() {
+      return `
+      <article class="card">
+        <h2>Assign Casualty Doctor</h2>
+        <form id="assignForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status !== 'discharged')}</select>
+          <label>Casualty Doctor</label><select required name="doctorId">${state.doctors.map(d => `<option value="${d.id}">${d.name} (${d.email})</option>`).join('')}</select>
+          <button type="submit">Assign Doctor + Notify</button>
+          <div id="assignMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderAdmissionsDesk() {
       const admitted = state.patients.filter(p => p.status === 'admitted');
       return `
       <article class="card">
-        <h2>Discharge and Capture Patient Feedback</h2>
+        <h2>Admissions / Discharge Desk</h2>
         <form id="dischargeForm">
-          <label>Patient</label>
-          <select required name="patientId">${admitted.length ? patientOptions(p => p.status === 'admitted') : '<option value="">No admitted patients</option>'}</select>
+          <label>Discharge Patient</label><select required name="patientId">${admitted.length ? patientOptions(p => p.status === 'admitted') : '<option value="">No admitted patients</option>'}</select>
           <label>Discharge Summary</label><textarea required name="summary"></textarea>
           <label>Patient Rating</label><select required name="rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
-          <label>Patient Feedback</label><textarea required name="feedback" placeholder="Share patient experience"></textarea>
-          <button type="submit">Discharge Patient</button>
+          <label>Feedback</label><textarea required name="feedback"></textarea>
+          <button type="submit">Discharge + Close Admission</button>
           <div id="dischargeMsg" class="msg ok"></div>
         </form>
       </article>`;
     }
 
-    function renderDoctorOverview() {
-      const active = state.patients.filter(p => p.status === 'admitted');
+    function renderDoctorDashboard() {
+      const queue = state.patients.filter(p => p.status === 'casualty' || p.status === 'admitted');
       return `
       <article class="card">
-        <h2>Doctor Dashboard</h2>
-        <p class="muted">Remote-capable workflow: review files, prescribe medication, and coordinate with nursing teams from anywhere.</p>
+        <h2>Casualty Doctor Queue</h2>
         <table>
-          <thead><tr><th>Patient</th><th>Criticality</th><th>Diagnosis</th><th>Documents</th><th>Prescriptions</th></tr></thead>
-          <tbody>${active.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.diagnosis}</td><td>${p.docs.length}/10</td><td>${p.prescriptions.length}</td></tr>`).join('')}</tbody>
+          <thead><tr><th>Patient</th><th>Triage</th><th>Complaint</th><th>Status</th><th>Doctor</th></tr></thead>
+          <tbody>${queue.map(p => `<tr><td>${p.fullName}</td><td>${badge(p.triageCategory)}</td><td>${p.presentingComplaint}</td><td>${p.status}</td><td>${doctorName(p.casualtyDoctorId)}</td></tr>`).join('')}</tbody>
         </table>
       </article>`;
     }
 
-    function renderFiles() {
+    function renderDoctorAssessment() {
       return `
       <article class="card">
-        <h2>Patient Files + Additional Documents</h2>
-        <form id="fileForm">
-          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+        <h2>Casualty Clinical Assessment Form</h2>
+        <form id="assessmentForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status !== 'discharged')}</select>
+          <label>Assessment Date/Time</label><input required type="datetime-local" name="time" />
+          <label>Clinical Notes</label><textarea required name="notes"></textarea>
+          <label>Working Diagnosis</label><textarea required name="diagnosis"></textarea>
+          <label>Risk/Criticality Update</label><select required name="triageCategory"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+          <button type="submit">Save Assessment</button>
+          <div id="assessmentMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderDoctorDecision() {
+      return `
+      <article class="card">
+        <h2>Doctor Disposition Decision Form</h2>
+        <form id="decisionForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status !== 'discharged')}</select>
+          <label>Decision</label><select required name="decision"><option value="home">Treat and Send Home</option><option value="admit">Admit to Ward</option></select>
+          <label>Medication</label><input required name="medication" placeholder="e.g. Augmentin 625mg" />
+          <label>Medication Instruction</label><textarea required name="instruction"></textarea>
+          <label>Take At Time</label><input required type="time" name="schedule" />
+          <label>If admitted, ward</label><select name="ward"><option>Surgical</option><option>ICU</option><option>Maternity</option><option>Medical</option></select>
+          <button type="submit">Save Decision + Notify Team</button>
+          <div id="decisionMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderDoctorDocs() {
+      return `
+      <article class="card">
+        <h2>Upload Clinical Documents (PDF only, max 10)</h2>
+        <form id="docForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status !== 'discharged')}</select>
           <label>Document Title</label><input required name="title" />
-          <label>Upload PDF (max 10 per patient)</label><input required name="file" type="file" accept="application/pdf,.pdf" />
-          <button type="submit">Upload Document</button>
-          <div id="fileMsg" class="msg"></div>
-        </form>
-      </article>
-      <article class="card">
-        <h3>Patient Document Counters</h3>
-        <table><thead><tr><th>Patient</th><th>Docs</th><th>Last Upload</th></tr></thead>
-        <tbody>${state.patients.filter(p => p.status === 'admitted').map(p => `<tr><td>${p.fullName}</td><td>${p.docs.length}/10</td><td>${p.docs[0]?.uploadedAt || '-'}</td></tr>`).join('')}</tbody></table>
-      </article>`;
-    }
-
-    function renderRx() {
-      return `
-      <article class="card">
-        <h2>Create Prescription</h2>
-        <form id="rxForm">
-          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
-          <label>Medication</label><input required name="medication" placeholder="e.g. Lisinopril 10mg" />
-          <label>Instructions</label><textarea required name="instruction" placeholder="How patient should take medication"></textarea>
-          <label>Scheduled Time</label><input required type="time" name="schedule" />
-          <label>Nurse Email</label><input required type="email" name="nurseEmail" placeholder="nurse@busamed.demo" />
-          <button type="submit">Save Prescription + Notify Nurse</button>
-          <div id="rxMsg" class="msg ok"></div>
+          <label>Upload PDF</label><input required type="file" name="file" accept="application/pdf,.pdf" />
+          <button type="submit">Upload File</button>
+          <div id="docMsg" class="msg"></div>
         </form>
       </article>`;
     }
 
-    function renderNurseOverview() {
-      const active = state.patients.filter(p => p.status === 'admitted');
+    function renderNurseDashboard() {
+      const wardPatients = state.patients.filter(p => p.status === 'admitted');
       return `
       <article class="card">
-        <h2>Nurse Station Overview</h2>
+        <h2>Ward Nursing Dashboard</h2>
         <table>
-          <thead><tr><th>Patient</th><th>Criticality</th><th>Latest BP</th><th>Medication Logs</th></tr></thead>
-          <tbody>${active.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.vitals[0]?.bloodPressure || '-'}</td><td>${p.medLogs.length}</td></tr>`).join('')}</tbody>
+          <thead><tr><th>Patient</th><th>Ward</th><th>Triage</th><th>Vitals Logs</th><th>Issues</th><th>Med Logs</th></tr></thead>
+          <tbody>${wardPatients.map(p => `<tr><td>${p.fullName}</td><td>${p.ward || '-'}</td><td>${badge(p.triageCategory)}</td><td>${p.vitals.length}</td><td>${p.issues.length}</td><td>${p.medLogs.length}</td></tr>`).join('')}</tbody>
         </table>
       </article>`;
     }
 
-    function renderVitals() {
+    function renderWardIntake() {
       return `
       <article class="card">
-        <h2>Vitals and Blood Pressure Monitoring</h2>
+        <h2>Ward Intake Nursing Form</h2>
+        <form id="wardIntakeForm">
+          <label>Admitted Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <label>Intake Date/Time</label><input required type="datetime-local" name="time" />
+          <label>Initial Observations</label><textarea required name="observations"></textarea>
+          <label>Nursing Care Plan</label><textarea required name="carePlan"></textarea>
+          <button type="submit">Save Ward Intake</button>
+          <div id="wardIntakeMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderVitalsIssues() {
+      return `
+      <article class="card">
+        <h2>Vitals and Patient Issues Log</h2>
         <form id="vitalsForm">
           <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
-          <label>Observation Date and Time</label><input required type="datetime-local" name="time" />
-          <label>Blood Pressure</label><input required name="bp" placeholder="e.g. 165/105" />
-          <label>Result / Notes</label><textarea required name="result" placeholder="Include alerts and escalation actions"></textarea>
-          <button type="submit">Save Vitals Log</button>
+          <label>Date/Time</label><input required type="datetime-local" name="time" />
+          <label>Blood Pressure</label><input required name="bp" placeholder="e.g. 145/95" />
+          <label>Pulse / Temp / Notes</label><textarea required name="notes"></textarea>
+          <label>Patient Issue (optional)</label><textarea name="issue" placeholder="Pain, nausea, bleeding, etc"></textarea>
+          <button type="submit">Save Log</button>
           <div id="vitalsMsg" class="msg ok"></div>
         </form>
       </article>`;
     }
 
-    function renderMeds() {
+    function renderMedAdmin() {
       return `
       <article class="card">
         <h2>Medication Administration Checklist</h2>
         <form id="medForm">
-          <label>Patient</label>
-          <select required id="medPatient" name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <label>Patient</label><select required id="medPatient" name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
           <div id="medRows" class="stack" style="margin-top:.5rem;"></div>
-          <button type="submit">Save Medication Logs</button>
+          <button type="submit">Save Medication Tick</button>
           <div id="medMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderPatientHome() {
+      const p = state.patients.find(x => x.email === state.auth.email) || state.patients[0];
+      return `
+      <article class="card">
+        <h2>Patient Virtual Follow-up</h2>
+        <p><strong>Name:</strong> ${p.fullName}</p>
+        <p><strong>Status:</strong> ${p.status}</p>
+        <p><strong>Assigned Ward:</strong> ${p.ward || '-'}</p>
+        <p><strong>Assigned Doctor:</strong> ${doctorName(p.casualtyDoctorId)}</p>
+        <p><strong>Last Discharge Summary:</strong> ${p.discharge?.summary || 'Not discharged yet'}</p>
+      </article>`;
+    }
+
+    function renderPatientTicket() {
+      const discharged = state.patients.filter(p => p.status === 'discharged');
+      return `
+      <article class="card">
+        <h2>Post-Discharge Ticket Form</h2>
+        <form id="ticketForm">
+          <label>Patient</label><select required name="patientId">${discharged.length ? patientOptions(p => p.status === 'discharged') : '<option value="">No discharged patients</option>'}</select>
+          <label>Ward treated in</label><input required name="ward" placeholder="e.g. Surgical" />
+          <label>Doctor treated by</label><select required name="doctorId">${state.doctors.map(d => `<option value="${d.id}">${d.name}</option>`).join('')}</select>
+          <label>Issue Category</label><select required name="category"><option>Medication Query</option><option>Wound Concern</option><option>Pain Management</option><option>Billing/Admin</option></select>
+          <label>Issue Details</label><textarea required name="details"></textarea>
+          <button type="submit">Create Ticket</button>
+          <div id="ticketMsg" class="msg ok"></div>
         </form>
       </article>`;
     }
@@ -493,33 +555,49 @@
     function renderOutbox() {
       return `
       <article class="card">
-        <h2>Communication Outbox</h2>
+        <h2>Notification Outbox</h2>
         <table>
-          <thead><tr><th>Sent At</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
-          <tbody>${state.emails.length ? state.emails.map(e => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.type}</td><td>${e.subject}</td></tr>`).join('') : '<tr><td colspan="4">No messages sent.</td></tr>'}</tbody>
+          <thead><tr><th>Time</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
+          <tbody>${state.emails.length ? state.emails.map(e => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.type}</td><td>${e.subject}</td></tr>`).join('') : '<tr><td colspan="4">No notifications</td></tr>'}</tbody>
         </table>
       </article>`;
     }
 
     function bindAdmin() {
-      const admitForm = document.getElementById('admitForm');
-      if (admitForm) {
-        admitForm.onsubmit = (e) => {
+      const openFileForm = document.getElementById('openFileForm');
+      if (openFileForm) {
+        openFileForm.onsubmit = (e) => {
           e.preventDefault();
-          const d = new FormData(admitForm);
+          const d = new FormData(openFileForm);
           const p = {
             id: 'p' + Date.now(),
             fullName: d.get('fullName'), idNumber: d.get('idNumber'), email: d.get('email'), phone: d.get('phone'),
-            emergencyContact: d.get('emergencyContact'), ward: d.get('ward'), doctorId: d.get('doctorId'), allergies: d.get('allergies') || '-',
-            diagnosis: d.get('diagnosis'), criticality: d.get('criticality'), consentSigned: true, status: 'admitted',
-            admittedAt: nowHuman(), welcomeSent: true, docs: [], prescriptions: [], vitals: [], medLogs: [], dischargeFeedback: null
+            address: d.get('address'), medicalAidScheme: d.get('medicalAidScheme'), medicalAidNumber: d.get('medicalAidNumber'),
+            emergencyContact: d.get('emergencyContact'), nextOfKin: d.get('nextOfKin'),
+            presentingComplaint: d.get('presentingComplaint'), triageCategory: d.get('triageCategory'),
+            casualtyDoctorId: '', ward: 'Casualty', admitted: false, status: 'casualty', diagnosis: '',
+            prescriptions: [], assessments: [], nurseIntake: null, vitals: [], issues: [], docs: [], medLogs: [], discharge: null
           };
           state.patients.push(p);
-          queueEmail(p.email, 'Welcome', 'Welcome to Busamed CareFlow');
           save();
-          setMessage(document.getElementById('admitMsg'), 'ok', `${p.fullName} admitted successfully. Welcome message sent.`);
-          admitForm.reset();
+          setMsg(document.getElementById('openFileMsg'), 'ok', `${p.fullName} file opened successfully.`);
+          openFileForm.reset();
           renderContent();
+        };
+      }
+
+      const assignForm = document.getElementById('assignForm');
+      if (assignForm) {
+        assignForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(assignForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          const doc = state.doctors.find(x => x.id === d.get('doctorId'));
+          if (!p || !doc) return;
+          p.casualtyDoctorId = doc.id;
+          queueEmail(doc.email, 'Doctor Assignment', `Assigned casualty case: ${p.fullName}`);
+          save();
+          setMsg(document.getElementById('assignMsg'), 'ok', `${doc.name} assigned and notified by email.`);
         };
       }
 
@@ -531,85 +609,110 @@
           const p = state.patients.find(x => x.id === d.get('patientId'));
           if (!p) return;
           p.status = 'discharged';
-          p.dischargedAt = nowHuman();
-          p.dischargeSummary = d.get('summary');
-          p.dischargeFeedback = { rating: Number(d.get('rating')), feedback: d.get('feedback'), capturedAt: nowHuman() };
-          queueEmail(p.email, 'Discharge', 'Discharge summary and thank you for feedback');
+          p.discharge = { time: now(), summary: d.get('summary'), rating: Number(d.get('rating')), feedback: d.get('feedback') };
+          queueEmail(p.email, 'Discharge', `You have been discharged from Busamed. Rating captured: ${p.discharge.rating}/5`);
           save();
-          setMessage(document.getElementById('dischargeMsg'), 'ok', `${p.fullName} discharged. Feedback ${p.dischargeFeedback.rating}/5 captured.`);
+          setMsg(document.getElementById('dischargeMsg'), 'ok', `${p.fullName} discharged and feedback captured.`);
           renderContent();
         };
       }
     }
 
     function bindDoctor() {
-      const fileForm = document.getElementById('fileForm');
-      if (fileForm) {
-        fileForm.onsubmit = (e) => {
+      const assessmentForm = document.getElementById('assessmentForm');
+      if (assessmentForm) {
+        assessmentForm.onsubmit = (e) => {
           e.preventDefault();
-          const d = new FormData(fileForm);
+          const d = new FormData(assessmentForm);
           const p = state.patients.find(x => x.id === d.get('patientId'));
-          const f = d.get('file');
-          const msg = document.getElementById('fileMsg');
           if (!p) return;
-
-          if (p.docs.length >= 10) {
-            setMessage(msg, 'warn', `Upload blocked: ${p.fullName} already has 10 documents.`);
-            return;
-          }
-
-          if (!f || !f.name || !f.name.toLowerCase().endsWith('.pdf')) {
-            setMessage(msg, 'warn', 'Only PDF files are allowed.');
-            return;
-          }
-
-          p.docs.unshift({ title: d.get('title'), fileName: f.name, uploadedAt: nowHuman(), uploadedBy: state.auth.name });
+          p.assessments.unshift({ time: d.get('time'), notes: d.get('notes'), diagnosis: d.get('diagnosis'), doctor: state.auth.name });
+          p.diagnosis = d.get('diagnosis');
+          p.triageCategory = d.get('triageCategory');
           save();
-          setMessage(msg, 'ok', `Document uploaded for ${p.fullName}. ${p.docs.length}/10 used.`);
-          fileForm.reset();
+          setMsg(document.getElementById('assessmentMsg'), 'ok', `Assessment saved for ${p.fullName}.`);
+          assessmentForm.reset();
           renderContent();
         };
       }
 
-      const rxForm = document.getElementById('rxForm');
-      if (rxForm) {
-        rxForm.onsubmit = (e) => {
+      const decisionForm = document.getElementById('decisionForm');
+      if (decisionForm) {
+        decisionForm.onsubmit = (e) => {
           e.preventDefault();
-          const d = new FormData(rxForm);
+          const d = new FormData(decisionForm);
           const p = state.patients.find(x => x.id === d.get('patientId'));
           if (!p) return;
-          p.prescriptions.unshift({
-            id: 'rx' + Date.now(),
-            medication: d.get('medication'),
-            instruction: d.get('instruction'),
-            schedule: d.get('schedule'),
-            createdAt: nowHuman(),
-            createdBy: state.auth.name
-          });
-          queueEmail(d.get('nurseEmail'), 'Prescription', `New prescription for ${p.fullName}`);
+
+          p.prescriptions.unshift({ id: 'rx' + Date.now(), medication: d.get('medication'), instruction: d.get('instruction'), schedule: d.get('schedule'), createdAt: now() });
+
+          if (d.get('decision') === 'home') {
+            p.status = 'discharged';
+            p.ward = 'Home';
+            p.discharge = { time: now(), summary: 'Casualty treatment completed. Sent home with medication.' };
+            queueEmail(p.email, 'Casualty Outcome', `You were treated and sent home with medication plan.`);
+          } else {
+            p.status = 'admitted';
+            p.admitted = true;
+            p.ward = d.get('ward');
+            const wardNurses = state.nurses.filter(n => n.ward.toLowerCase() === p.ward.toLowerCase());
+            wardNurses.forEach(n => queueEmail(n.email, 'Ward Admission', `New admission in ${p.ward}: ${p.fullName}`));
+            const assignedDoctor = state.doctors.find(doc => doc.id === p.casualtyDoctorId);
+            if (assignedDoctor) {
+              queueEmail(assignedDoctor.email, 'Admission File', `Patient file opened/admitted: ${p.fullName} (${p.ward})`);
+            }
+          }
+
           save();
-          setMessage(document.getElementById('rxMsg'), 'ok', `Prescription created for ${p.fullName} and nurse notified.`);
-          rxForm.reset();
+          setMsg(document.getElementById('decisionMsg'), 'ok', `Doctor decision saved for ${p.fullName}.`);
+          decisionForm.reset();
           renderContent();
+        };
+      }
+
+      const docForm = document.getElementById('docForm');
+      if (docForm) {
+        docForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(docForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          const file = d.get('file');
+          const msg = document.getElementById('docMsg');
+          if (!p) return;
+
+          if (p.docs.length >= 10) {
+            setMsg(msg, 'warn', `Upload blocked: ${p.fullName} already has 10 files.`);
+            return;
+          }
+          if (!file || !file.name || !file.name.toLowerCase().endsWith('.pdf')) {
+            setMsg(msg, 'warn', 'Only PDF files allowed.');
+            return;
+          }
+
+          p.docs.unshift({ title: d.get('title'), fileName: file.name, uploadedAt: now(), uploadedBy: state.auth.name });
+          save();
+          setMsg(msg, 'ok', `Document uploaded for ${p.fullName}. ${p.docs.length}/10 used.`);
+          docForm.reset();
         };
       }
     }
 
-    function paintMedicationRows(patientId) {
+    function paintMedRows(patientId) {
       const holder = document.getElementById('medRows');
       const p = state.patients.find(x => x.id === patientId);
       if (!holder || !p) return;
       if (!p.prescriptions.length) {
-        holder.innerHTML = '<p class="muted">No doctor prescriptions available for this patient.</p>';
+        holder.innerHTML = '<p class="muted">No prescriptions found for this patient.</p>';
         return;
       }
+
       holder.innerHTML = p.prescriptions.map((rx, i) => `
         <div class="panel">
-          <div><strong>${rx.medication}</strong> ${criticalityBadge(p.criticality)}</div>
-          <div class="muted">Schedule: ${rx.schedule} | Instruction: ${rx.instruction}</div>
-          <label>Medication given?</label>
+          <div><strong>${rx.medication}</strong> ${badge(p.triageCategory)}</div>
+          <div class="muted">Time: ${rx.schedule} | Instruction: ${rx.instruction}</div>
+          <label>Given?</label>
           <select name="given_${i}"><option value="yes">Yes</option><option value="no">No</option></select>
-          <label>Given at (date/time)</label>
+          <label>Actual given date/time</label>
           <input type="datetime-local" name="time_${i}" />
           <input type="hidden" name="med_${i}" value="${rx.medication}" />
           <input type="hidden" name="ins_${i}" value="${rx.instruction}" />
@@ -619,6 +722,20 @@
     }
 
     function bindNurse() {
+      const wardIntakeForm = document.getElementById('wardIntakeForm');
+      if (wardIntakeForm) {
+        wardIntakeForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(wardIntakeForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          if (!p) return;
+          p.nurseIntake = { time: d.get('time'), observations: d.get('observations'), carePlan: d.get('carePlan'), nurse: state.auth.name };
+          save();
+          setMsg(document.getElementById('wardIntakeMsg'), 'ok', `Ward intake saved for ${p.fullName}.`);
+          wardIntakeForm.reset();
+        };
+      }
+
       const vitalsForm = document.getElementById('vitalsForm');
       if (vitalsForm) {
         vitalsForm.onsubmit = (e) => {
@@ -626,9 +743,13 @@
           const d = new FormData(vitalsForm);
           const p = state.patients.find(x => x.id === d.get('patientId'));
           if (!p) return;
-          p.vitals.unshift({ time: d.get('time'), bloodPressure: d.get('bp'), result: d.get('result'), loggedBy: state.auth.name });
+
+          p.vitals.unshift({ time: d.get('time'), bloodPressure: d.get('bp'), notes: d.get('notes'), nurse: state.auth.name });
+          const issue = d.get('issue')?.trim();
+          if (issue) p.issues.unshift({ time: d.get('time'), detail: issue, nurse: state.auth.name });
+
           save();
-          setMessage(document.getElementById('vitalsMsg'), 'ok', `Vitals logged for ${p.fullName} at ${d.get('time')}.`);
+          setMsg(document.getElementById('vitalsMsg'), 'ok', `Vitals/issue log saved for ${p.fullName}.`);
           vitalsForm.reset();
           renderContent();
         };
@@ -636,8 +757,8 @@
 
       const medPatient = document.getElementById('medPatient');
       if (medPatient) {
-        paintMedicationRows(medPatient.value);
-        medPatient.onchange = () => paintMedicationRows(medPatient.value);
+        paintMedRows(medPatient.value);
+        medPatient.onchange = () => paintMedRows(medPatient.value);
       }
 
       const medForm = document.getElementById('medForm');
@@ -647,8 +768,9 @@
           const d = new FormData(medForm);
           const p = state.patients.find(x => x.id === d.get('patientId'));
           if (!p) return;
+
           let count = 0;
-          p.prescriptions.forEach((_, i) => {
+          p.prescriptions.forEach((rx, i) => {
             if (d.get(`given_${i}`) === 'yes') {
               p.medLogs.unshift({
                 medication: d.get(`med_${i}`),
@@ -661,18 +783,41 @@
             }
           });
           save();
-          setMessage(document.getElementById('medMsg'), 'ok', `${count} medication administration entries saved for ${p.fullName}.`);
+          setMsg(document.getElementById('medMsg'), 'ok', `${count} medication entries saved for ${p.fullName}.`);
           renderContent();
         };
       }
     }
 
-    function renderAuthLocked() {
-      return `
-      <article class="card">
-        <h2>Sign in required</h2>
-        <p class="muted">Please sign in with dummy credentials to access role dashboards.</p>
-      </article>`;
+    function bindPatient() {
+      const ticketForm = document.getElementById('ticketForm');
+      if (ticketForm) {
+        ticketForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(ticketForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          const doctor = state.doctors.find(x => x.id === d.get('doctorId'));
+          if (!p || !doctor) return;
+
+          const t = {
+            id: 't' + Date.now(),
+            patientId: p.id,
+            patient: p.fullName,
+            ward: d.get('ward'),
+            doctorId: doctor.id,
+            doctor: doctor.name,
+            category: d.get('category'),
+            details: d.get('details'),
+            status: 'open',
+            createdAt: now()
+          };
+          state.tickets.unshift(t);
+          queueEmail(doctor.email, 'Follow-up Ticket', `New post-discharge ticket from ${p.fullName}`);
+          save();
+          setMsg(document.getElementById('ticketMsg'), 'ok', `Ticket ${t.id} logged and sent to ${doctor.name}.`);
+          ticketForm.reset();
+        };
+      }
     }
 
     function renderContent() {
@@ -681,34 +826,43 @@
         return;
       }
 
-      if (state.auth.role === 'administrator') {
-        if (activeTab === 'adminOverview') contentEl.innerHTML = renderAdminOverview();
-        if (activeTab === 'admit') contentEl.innerHTML = renderAdmit();
-        if (activeTab === 'discharge') contentEl.innerHTML = renderDischarge();
+      if (state.auth.role === 'admin') {
+        if (activeTab === 'adminDashboard') contentEl.innerHTML = renderAdminDashboard();
+        if (activeTab === 'openFile') contentEl.innerHTML = renderOpenFile();
+        if (activeTab === 'assignCasualty') contentEl.innerHTML = renderAssignCasualty();
+        if (activeTab === 'admissionsDesk') contentEl.innerHTML = renderAdmissionsDesk();
         if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
         bindAdmin();
       }
 
       if (state.auth.role === 'doctor') {
-        if (activeTab === 'doctorOverview') contentEl.innerHTML = renderDoctorOverview();
-        if (activeTab === 'files') contentEl.innerHTML = renderFiles();
-        if (activeTab === 'rx') contentEl.innerHTML = renderRx();
+        if (activeTab === 'doctorDashboard') contentEl.innerHTML = renderDoctorDashboard();
+        if (activeTab === 'doctorAssessment') contentEl.innerHTML = renderDoctorAssessment();
+        if (activeTab === 'doctorDecision') contentEl.innerHTML = renderDoctorDecision();
+        if (activeTab === 'doctorDocs') contentEl.innerHTML = renderDoctorDocs();
         if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
         bindDoctor();
       }
 
       if (state.auth.role === 'nurse') {
-        if (activeTab === 'nurseOverview') contentEl.innerHTML = renderNurseOverview();
-        if (activeTab === 'vitals') contentEl.innerHTML = renderVitals();
-        if (activeTab === 'meds') contentEl.innerHTML = renderMeds();
+        if (activeTab === 'nurseDashboard') contentEl.innerHTML = renderNurseDashboard();
+        if (activeTab === 'wardIntake') contentEl.innerHTML = renderWardIntake();
+        if (activeTab === 'vitalsIssues') contentEl.innerHTML = renderVitalsIssues();
+        if (activeTab === 'medAdmin') contentEl.innerHTML = renderMedAdmin();
         if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
         bindNurse();
+      }
+
+      if (state.auth.role === 'patient') {
+        if (activeTab === 'patientHome') contentEl.innerHTML = renderPatientHome();
+        if (activeTab === 'patientTicket') contentEl.innerHTML = renderPatientTicket();
+        bindPatient();
       }
     }
 
     function renderSession() {
       if (!state.auth.loggedIn) {
-        sessionText.textContent = 'Not signed in';
+        sessionText.textContent = 'Not logged in';
         return;
       }
       sessionText.textContent = `${state.auth.name} (${state.auth.role}) | Last login: ${state.auth.lastLogin}`;
@@ -723,7 +877,7 @@
     document.getElementById('loginBtn').onclick = signIn;
     document.getElementById('logoutBtn').onclick = signOut;
 
-    function tickClock() { document.getElementById('nowTime').textContent = `System time: ${new Date().toLocaleString()}`; }
+    function tickClock() { document.getElementById('clock').textContent = `System time: ${new Date().toLocaleString()}`; }
     tickClock();
     setInterval(tickClock, 1000);
 
