@@ -3,33 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Busamed Bloemfontein | Paperless Hospital Demo</title>
+  <title>M. Zilani Attorneys | Paperless Law Firm Demo</title>
   <style>
     :root {
-      --bg: #f3f7fc;
+      --bg: #f4f2ef;
       --card: #ffffff;
-      --border: #d7e3f3;
-      --text: #1f2937;
-      --muted: #667085;
-      --primary: #155fd0;
-      --primary-dark: #124ca6;
+      --border: #e2ddd6;
+      --text: #25211c;
+      --muted: #6f665b;
+      --primary: #8d6f3a;
+      --primary-dark: #70572d;
+      --accent: #1f2937;
       --ok-bg: #ecfdf3;
       --ok-text: #05603a;
-      --chip: #e8f1ff;
-      --shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+      --chip-bg: #f0e7d8;
+      --shadow: 0 4px 14px rgba(37, 33, 28, 0.08);
     }
 
     * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
     body { margin: 0; background: var(--bg); color: var(--text); }
 
     header {
-      background: linear-gradient(120deg, #12356f, #155fd0);
+      background: linear-gradient(120deg, var(--accent), #374151);
       color: #fff;
-      padding: 1.3rem 1rem;
+      padding: 1.4rem 1rem;
     }
 
-    h1 { margin: 0; font-size: 1.45rem; }
-    header p { margin: 0.35rem 0 0; opacity: 0.95; }
+    h1 { margin: 0; font-size: 1.4rem; }
+    header p { margin: 0.45rem 0 0; opacity: 0.95; max-width: 960px; }
 
     .layout {
       display: grid;
@@ -47,7 +48,7 @@
       padding: 0.95rem;
     }
 
-    .panel h2, .card h2 { margin: 0 0 0.7rem; font-size: 1.05rem; }
+    .panel h2, .card h2 { margin: 0 0 0.72rem; font-size: 1.02rem; }
 
     .nav-list { display: grid; gap: 0.5rem; }
 
@@ -55,7 +56,7 @@
       width: 100%;
       text-align: left;
       border: 1px solid var(--border);
-      background: #f8fbff;
+      background: #fbf8f3;
       color: var(--text);
       border-radius: 9px;
       padding: 0.62rem;
@@ -64,12 +65,12 @@
     }
 
     .nav-button.active, .nav-button:hover {
-      background: #e9f2ff;
-      border-color: #bad3fb;
+      background: #f3e9d6;
+      border-color: #d7c29c;
     }
 
-    .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
-    .chip { background: var(--chip); color: #1e429f; padding: 0.22rem 0.58rem; border-radius: 999px; font-size: 0.78rem; }
+    .chips { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.45rem; }
+    .chip { background: var(--chip-bg); color: #674c1f; padding: 0.22rem 0.58rem; border-radius: 999px; font-size: 0.76rem; }
 
     .content { display: grid; gap: 1rem; }
 
@@ -82,12 +83,12 @@
     .kpi {
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 0.7rem;
-      background: #f8fbff;
+      padding: 0.72rem;
+      background: #faf8f4;
     }
 
     .kpi small { color: var(--muted); display: block; }
-    .kpi strong { display: block; font-size: 1.3rem; color: #0b4fbb; margin-top: 0.2rem; }
+    .kpi strong { display: block; font-size: 1.22rem; color: var(--primary-dark); margin-top: 0.2rem; }
 
     .two-col {
       display: grid;
@@ -97,7 +98,7 @@
 
     label {
       display: block;
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       font-weight: 600;
       margin: 0.6rem 0 0.28rem;
     }
@@ -110,7 +111,7 @@
       font-size: 0.93rem;
     }
 
-    textarea { min-height: 84px; resize: vertical; }
+    textarea { min-height: 92px; resize: vertical; }
 
     button {
       margin-top: 0.8rem;
@@ -123,6 +124,9 @@
 
     button:hover { background: var(--primary-dark); }
 
+    .btn-secondary { background: #4b5563; }
+    .btn-secondary:hover { background: #374151; }
+
     .result {
       margin-top: 0.75rem;
       display: none;
@@ -134,10 +138,20 @@
       font-size: 0.9rem;
     }
 
-    .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 0.55rem; }
+    .table { width: 100%; border-collapse: collapse; font-size: 0.89rem; margin-top: 0.5rem; }
     .table th, .table td { border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; padding: 0.52rem; }
 
-    .muted { color: var(--muted); font-size: 0.86rem; }
+    .muted { color: var(--muted); font-size: 0.84rem; }
+
+    .meeting-link {
+      display: inline-block;
+      margin-top: 0.35rem;
+      color: #1d4ed8;
+      font-size: 0.83rem;
+      text-decoration: none;
+    }
+
+    .meeting-link:hover { text-decoration: underline; }
 
     @media (max-width: 980px) {
       .layout { grid-template-columns: 1fr; }
@@ -147,55 +161,74 @@
 </head>
 <body>
   <header>
-    <h1>Busamed Bloemfontein - Paperless Hospital System (Demo)</h1>
-    <p>Onboarding, paperless consent, prescriptions, nurse escalations, ward visibility, and digital sick notes with simulated email delivery.</p>
+    <h1>M. Zilani Attorneys — Paperless Operations Portal (Demo)</h1>
+    <p>Designed for a small legal team in Mthatha to migrate paper files, capture voice-based case notes, onboard clients digitally, and run virtual consultations.</p>
   </header>
 
   <main class="layout">
     <aside class="panel">
-      <h2>Workflow Menu</h2>
+      <h2>Demo Workflow</h2>
       <div id="navList" class="nav-list"></div>
-      <h2 style="margin-top: 1rem;">Roles</h2>
+
+      <h2 style="margin-top: 1rem;">Practice Profile</h2>
       <div class="chips">
-        <span class="chip">Administrator</span>
-        <span class="chip">Doctor</span>
-        <span class="chip">Nurse</span>
+        <span class="chip">Mthatha, Eastern Cape</span>
+        <span class="chip">3–4 Team Members</span>
+        <span class="chip">Conveyancing + RAF + Family Law</span>
       </div>
-      <p class="muted" style="margin-top: 0.7rem;">Demo mode: emails are simulated and shown in Email Outbox.</p>
+      <p class="muted" style="margin-top: 0.7rem;">Demo mode: OCR, dictation, WhatsApp, and email steps are simulated.</p>
     </aside>
 
     <section id="content" class="content"></section>
   </main>
 
   <script>
-    const STORAGE_KEY = "busamed-paperless-demo-v2";
+    const STORAGE_KEY = "mzilani-paperless-demo-v1";
 
     const seed = {
-      doctors: [
-        { id: "d1", name: "Dr. L. Mokoena", ward: "Surgical" },
-        { id: "d2", name: "Dr. K. Naidoo", ward: "Maternity" },
-        { id: "d3", name: "Dr. J. Jacobs", ward: "Emergency" },
-        { id: "d4", name: "Dr. S. Dlamini", ward: "ICU" }
+      staff: [
+        { id: "s1", name: "Adv. M. Zilani", role: "Principal Attorney" },
+        { id: "s2", name: "L. Nondaba", role: "Candidate Attorney" },
+        { id: "s3", name: "P. Mvundle", role: "Admin Clerk" },
+        { id: "s4", name: "A. Mkhize", role: "Reception" }
       ],
-      patients: [
-        { id: "p1", name: "Thabo Molefe", age: 44, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
-        { id: "p2", name: "Ayanda Sithole", age: 29, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
-        { id: "p3", name: "Noluthando Dube", age: 31, ward: "Maternity", doctorId: "d2", consentSigned: true, consentType: "Digital Signature" }
+      clients: [
+        { id: "c1", name: "Sipho Ndlovu", contact: "083 352 6632", matterType: "RAF Claim", intake: "Voice + Upload" },
+        { id: "c2", name: "Nomsa Cakwe", contact: "zilaniattorneys@gmail.com", matterType: "Property Transfer", intake: "Portal Form" }
       ],
-      prescriptions: [],
-      issues: [],
-      sickNotes: [],
-      emails: []
+      matters: [
+        {
+          id: "m1",
+          clientId: "c1",
+          title: "RAF Loss of Support",
+          status: "In Progress",
+          nextDate: "2026-03-10",
+          digitalDocs: 9,
+          source: "Scanned Archive"
+        },
+        {
+          id: "m2",
+          clientId: "c2",
+          title: "Conveyancing - Erf 223",
+          status: "Pending FICA",
+          nextDate: "2026-02-26",
+          digitalDocs: 4,
+          source: "Online Intake"
+        }
+      ],
+      scans: [],
+      voiceNotes: [],
+      meetings: [],
+      outbox: []
     };
 
     const views = [
-      { id: "dashboard", label: "Hospital Dashboard" },
-      { id: "onboarding", label: "Admin: Onboard Patient" },
-      { id: "prescriptions", label: "Doctor: Prescribe Pills" },
-      { id: "issues", label: "Nurse: Log Patient Issues" },
-      { id: "wards", label: "Ward Doctor + Patients" },
-      { id: "sicknotes", label: "Doctor: Sick Notes" },
-      { id: "outbox", label: "Email Outbox" }
+      { id: "dashboard", label: "Firm Dashboard" },
+      { id: "migration", label: "Paper File Migration" },
+      { id: "voice", label: "Voice-to-Case Notes" },
+      { id: "onboarding", label: "Client Onboarding" },
+      { id: "consultations", label: "Virtual Consultations" },
+      { id: "outbox", label: "Client Comms Log" }
     ];
 
     let state = loadState();
@@ -205,9 +238,10 @@
     const content = document.getElementById("content");
 
     function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return structuredClone(seed);
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : structuredClone(seed);
+        return JSON.parse(raw);
       } catch {
         return structuredClone(seed);
       }
@@ -223,28 +257,29 @@
       render();
     }
 
-    function doctorById(id) { return state.doctors.find((d) => d.id === id); }
-    function patientById(id) { return state.patients.find((p) => p.id === id); }
-
-    function patientOptions() {
-      return state.patients.map((p) => `<option value="${p.id}">${p.name} - ${p.ward}</option>`).join("");
+    function clientById(id) {
+      return state.clients.find((client) => client.id === id);
     }
 
-    function doctorOptions(ward) {
-      return state.doctors
-        .filter((d) => !ward || d.ward === ward)
-        .map((d) => `<option value="${d.id}">${d.name} (${d.ward})</option>`)
-        .join("");
+    function clientOptions() {
+      return state.clients.map((client) => `<option value="${client.id}">${client.name} — ${client.matterType}</option>`).join("");
     }
 
-    function queueEmail({ to, subject, body, tag }) {
-      state.emails.unshift({
-        id: `e${Date.now()}`,
-        to,
+    function matterOptions() {
+      return state.matters.map((matter) => {
+        const client = clientById(matter.clientId);
+        return `<option value="${matter.id}">${matter.title} (${client?.name || "Unknown client"})</option>`;
+      }).join("");
+    }
+
+    function queueMessage({ recipient, channel, subject, body }) {
+      state.outbox.unshift({
+        id: `msg-${Date.now()}`,
+        recipient,
+        channel,
         subject,
         body,
-        tag,
-        sentAt: new Date().toLocaleString()
+        at: new Date().toLocaleString()
       });
       persist();
     }
@@ -252,337 +287,404 @@
     function renderNav() {
       navList.innerHTML = "";
       views.forEach((view) => {
-        const btn = document.createElement("button");
-        btn.className = `nav-button ${activeView === view.id ? "active" : ""}`;
-        btn.textContent = view.label;
-        btn.onclick = () => {
+        const button = document.createElement("button");
+        button.className = `nav-button ${activeView === view.id ? "active" : ""}`;
+        button.textContent = view.label;
+        button.onclick = () => {
           activeView = view.id;
           render();
         };
-        navList.appendChild(btn);
+        navList.appendChild(button);
       });
     }
 
     function dashboardView() {
-      const paperlessRate = state.patients.length
-        ? Math.round((state.patients.filter((p) => p.consentSigned).length / state.patients.length) * 100)
-        : 0;
+      const totalDocs = state.matters.reduce((sum, matter) => sum + matter.digitalDocs, 0) + state.scans.length;
+      const paperlessProgress = state.matters.length ? Math.round((state.matters.filter((matter) => matter.digitalDocs >= 5).length / state.matters.length) * 100) : 0;
+
       return `
       <article class="card">
-        <h2>Paperless Performance Snapshot</h2>
+        <h2>Paperless Progress Snapshot</h2>
         <div class="kpi-grid">
-          <div class="kpi"><small>Patients</small><strong>${state.patients.length}</strong></div>
-          <div class="kpi"><small>Consent Signed</small><strong>${paperlessRate}%</strong></div>
-          <div class="kpi"><small>Prescriptions</small><strong>${state.prescriptions.length}</strong></div>
-          <div class="kpi"><small>Emails Sent</small><strong>${state.emails.length}</strong></div>
+          <div class="kpi"><small>Active Clients</small><strong>${state.clients.length}</strong></div>
+          <div class="kpi"><small>Active Matters</small><strong>${state.matters.length}</strong></div>
+          <div class="kpi"><small>Digitised Documents</small><strong>${totalDocs}</strong></div>
+          <div class="kpi"><small>Paperless Readiness</small><strong>${paperlessProgress}%</strong></div>
         </div>
-        <p class="muted" style="margin-top:0.65rem;">Designed to reduce paperwork across all wards in one hospital-wide workflow.</p>
+        <p class="muted" style="margin-top:0.65rem;">Use this dashboard during your demo to show progress from physical files to a searchable case portal.</p>
         <button id="resetBtn" type="button">Reset Demo Data</button>
       </article>
+
       <article class="card">
-        <h2>Current Patient Register</h2>
+        <h2>Current Matters Register</h2>
         <table class="table">
-          <thead><tr><th>Patient</th><th>Ward</th><th>Doctor</th><th>Consent</th></tr></thead>
+          <thead><tr><th>Matter</th><th>Client</th><th>Status</th><th>Next Date</th><th>Digital Docs</th><th>Source</th></tr></thead>
           <tbody>
-            ${state.patients.map((p) => `<tr><td>${p.name} (Age ${p.age})</td><td>${p.ward}</td><td>${doctorById(p.doctorId)?.name || "Unassigned"}</td><td>${p.consentSigned ? "Signed" : "Pending"}</td></tr>`).join("")}
+            ${state.matters.map((matter) => `
+              <tr>
+                <td>${matter.title}</td>
+                <td>${clientById(matter.clientId)?.name || "Unknown"}</td>
+                <td>${matter.status}</td>
+                <td>${matter.nextDate}</td>
+                <td>${matter.digitalDocs}</td>
+                <td>${matter.source}</td>
+              </tr>
+            `).join("")}
           </tbody>
         </table>
+      </article>`;
+    }
+
+    function migrationView() {
+      return `
+      <article class="card">
+        <h2>Scan Paper Files & Attach to Matter</h2>
+        <form id="scanForm">
+          <label>Choose matter</label>
+          <select required name="matterId">${matterOptions()}</select>
+
+          <label>Document type</label>
+          <select required name="docType">
+            <option>Client ID / FICA</option>
+            <option>Court Pleadings</option>
+            <option>Affidavit</option>
+            <option>Property Transfer Docs</option>
+            <option>RAF Medical Report</option>
+            <option>Correspondence</option>
+          </select>
+
+          <label>Upload scanned file</label>
+          <input required name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+
+          <label>OCR summary preview (editable)</label>
+          <textarea required name="ocrSummary" placeholder="Auto-extracted text appears here for quick correction before saving."></textarea>
+
+          <button type="submit">Save to Digital File</button>
+          <div id="scanResult" class="result"></div>
+        </form>
+      </article>`;
+    }
+
+    function voiceView() {
+      return `
+      <article class="card">
+        <h2>Voice-to-Case Notes (Attorney Dictation)</h2>
+        <form id="voiceForm">
+          <label>Select matter</label>
+          <select required name="matterId">${matterOptions()}</select>
+
+          <label>Dictation language</label>
+          <select name="language">
+            <option value="en-ZA">English (South Africa)</option>
+            <option value="xh-ZA">isiXhosa (South Africa)</option>
+          </select>
+
+          <button type="button" id="startDictation" class="btn-secondary">Start Voice Capture</button>
+
+          <label>Transcript / notes</label>
+          <textarea required name="transcript" id="voiceTranscript" placeholder="Speak and let the system type, or paste from your AI assistant."></textarea>
+
+          <button type="submit">Save Case Note</button>
+          <div id="voiceResult" class="result"></div>
+          <p class="muted">If browser speech recognition is unavailable, you can still paste transcript text from Gemini or another dictation tool.</p>
+        </form>
       </article>`;
     }
 
     function onboardingView() {
       return `
       <article class="card">
-        <h2>Administrator Onboarding (No Paper Forms)</h2>
+        <h2>Digital Client Intake & Case Opening</h2>
         <form id="onboardForm">
-          <label>Patient full name</label>
-          <input required name="name" placeholder="e.g. Lerato Motaung" />
+          <label>Client full name</label>
+          <input required name="name" placeholder="e.g. Babalwa Mhlanga" />
 
-          <label>Age</label>
-          <input required type="number" min="0" max="120" name="age" />
+          <label>Mobile number / email</label>
+          <input required name="contact" placeholder="e.g. 082 xxx xxxx or email" />
 
-          <label>Ward</label>
-          <select required name="ward" id="onboardWard">
-            <option value="">Select ward</option>
-            <option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option>
+          <label>Legal service type</label>
+          <select required name="matterType">
+            <option>Divorce / Family Law</option>
+            <option>RAF Claim</option>
+            <option>Conveyancing</option>
+            <option>Labour Dispute</option>
+            <option>Criminal Matter</option>
+            <option>Civil Litigation</option>
           </select>
 
-          <label>Assign doctor</label>
-          <select required name="doctorId" id="onboardDoctor"><option value="">Select doctor</option></select>
+          <label>Case summary</label>
+          <textarea required name="summary" placeholder="Short description of the issue."></textarea>
 
-          <label>Patient email</label>
-          <input required type="email" name="email" placeholder="patient@email.com" />
+          <label>Consent capture (digital signature)</label>
+          <input required name="signature" placeholder="Type client full name as signature" />
 
-          <label>Consent capture (paperless signature)</label>
-          <input required name="signature" placeholder="Type patient's full name as digital signature" />
-
-          <button type="submit">Create Patient & Send Welcome Email</button>
+          <button type="submit">Create Client + Open Matter + Send Welcome Link</button>
           <div id="onboardResult" class="result"></div>
         </form>
       </article>`;
     }
 
-    function prescriptionView() {
+    function consultationsView() {
       return `
       <article class="card">
-        <h2>Doctor Prescription (Pills) -> Nurse Email</h2>
-        <form id="rxForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
+        <h2>Virtual Meetings & Consultations</h2>
+        <form id="meetingForm">
+          <label>Client</label>
+          <select required name="clientId">${clientOptions()}</select>
 
-          <label>Medication / Pills</label>
-          <input required name="medication" placeholder="e.g. Amoxicillin 500mg capsules" />
+          <label>Meeting date</label>
+          <input required type="date" name="date" />
 
-          <label>Dosage</label>
-          <textarea required name="dosage" placeholder="1 capsule every 8 hours for 5 days"></textarea>
+          <label>Meeting time</label>
+          <input required type="time" name="time" />
 
-          <label>Nurse email</label>
-          <input required type="email" name="nurseEmail" placeholder="nurse.surgical@busamed.demo" />
+          <label>Purpose</label>
+          <input required name="purpose" placeholder="Consultation / update / document review" />
 
-          <button type="submit">Send Prescription</button>
-          <div id="rxResult" class="result"></div>
+          <label>Platform</label>
+          <select required name="platform"><option>Google Meet</option><option>Zoom</option><option>Microsoft Teams</option><option>WhatsApp Video</option></select>
+
+          <button type="submit">Schedule & Notify Client</button>
+          <div id="meetingResult" class="result"></div>
         </form>
-      </article>`;
-    }
+      </article>
 
-    function issuesView() {
-      return `
       <article class="card">
-        <h2>Nurse Issues & Escalation</h2>
-        <form id="issueForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
-
-          <label>Severity</label>
-          <select required name="severity"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
-
-          <label>Send to relevant person/team</label>
-          <input required name="recipient" placeholder="e.g. Surgical Lead / Dr. Mokoena" />
-
-          <label>Recipient email</label>
-          <input required type="email" name="recipientEmail" placeholder="recipient@busamed.demo" />
-
-          <label>Issue details</label>
-          <textarea required name="details" placeholder="Describe concern"></textarea>
-
-          <button type="submit">Escalate Issue</button>
-          <div id="issueResult" class="result"></div>
-        </form>
-      </article>`;
-    }
-
-    function wardsView() {
-      return `
-      <article class="card">
-        <h2>Ward Allocation View</h2>
-        <label>Select ward</label>
-        <select id="wardFilter"><option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option></select>
-        <div id="wardTableWrap"></div>
-      </article>`;
-    }
-
-    function sickNotesView() {
-      return `
-      <article class="card">
-        <h2>Doctor Sick Notes Upload + Email Patient</h2>
-        <form id="sickForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
-
-          <label>Patient email</label>
-          <input required type="email" name="patientEmail" placeholder="patient@email.com" />
-
-          <label>Sick note file</label>
-          <input required type="file" name="file" accept=".pdf,.jpg,.png,.doc,.docx" />
-
-          <label>Doctor message</label>
-          <textarea required name="message" placeholder="Recovery advice and return date"></textarea>
-
-          <button type="submit">Upload & Send Sick Note</button>
-          <div id="sickResult" class="result"></div>
-        </form>
+        <h2>Upcoming Consultations</h2>
+        <table class="table">
+          <thead><tr><th>Date</th><th>Client</th><th>Purpose</th><th>Platform</th><th>Link</th></tr></thead>
+          <tbody>
+            ${state.meetings.length ? state.meetings.map((meeting) => `
+              <tr>
+                <td>${meeting.date} ${meeting.time}</td>
+                <td>${clientById(meeting.clientId)?.name || "Unknown"}</td>
+                <td>${meeting.purpose}</td>
+                <td>${meeting.platform}</td>
+                <td><a class="meeting-link" href="${meeting.link}" target="_blank">${meeting.link}</a></td>
+              </tr>
+            `).join("") : `<tr><td colspan="5">No consultations scheduled yet.</td></tr>`}
+          </tbody>
+        </table>
       </article>`;
     }
 
     function outboxView() {
       return `
       <article class="card">
-        <h2>Email Outbox (Simulated)</h2>
+        <h2>Client Communication Log (Email / SMS / WhatsApp Simulation)</h2>
         <table class="table">
-          <thead><tr><th>Time</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
+          <thead><tr><th>Time</th><th>Recipient</th><th>Channel</th><th>Subject</th></tr></thead>
           <tbody>
-            ${state.emails.length ? state.emails.map((e) => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.tag}</td><td>${e.subject}</td></tr>`).join("") : `<tr><td colspan="4">No emails sent yet.</td></tr>`}
+            ${state.outbox.length ? state.outbox.map((message) => `
+              <tr>
+                <td>${message.at}</td>
+                <td>${message.recipient}</td>
+                <td>${message.channel}</td>
+                <td>${message.subject}</td>
+              </tr>
+            `).join("") : `<tr><td colspan="4">No communications sent yet.</td></tr>`}
           </tbody>
         </table>
       </article>`;
-    }
-
-    function renderWardTable(ward) {
-      const doctors = state.doctors.filter((d) => d.ward === ward);
-      const rows = doctors.map((doc) => {
-        const pts = state.patients.filter((p) => p.doctorId === doc.id);
-        return `<tr><td>${doc.name}</td><td>${doc.ward}</td><td>${pts.length ? pts.map((p) => `${p.name} (Age ${p.age})`).join("<br>") : "No patients"}</td></tr>`;
-      }).join("");
-      document.getElementById("wardTableWrap").innerHTML = `
-        <table class="table">
-          <thead><tr><th>Doctor</th><th>Ward</th><th>Assigned patients</th></tr></thead>
-          <tbody>${rows || `<tr><td colspan="3">No doctors in this ward.</td></tr>`}</tbody>
-        </table>`;
     }
 
     function bindDashboard() {
       document.getElementById("resetBtn").onclick = resetDemoData;
     }
 
+    function bindMigration() {
+      const form = document.getElementById("scanForm");
+      const result = document.getElementById("scanResult");
+
+      form.onsubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const matterId = data.get("matterId");
+        const file = data.get("file");
+        const matter = state.matters.find((item) => item.id === matterId);
+
+        state.scans.push({
+          id: `scan-${Date.now()}`,
+          matterId,
+          docType: data.get("docType"),
+          fileName: file?.name || "unknown",
+          ocrSummary: data.get("ocrSummary")
+        });
+
+        if (matter) matter.digitalDocs += 1;
+
+        queueMessage({
+          recipient: "Internal Team",
+          channel: "Email",
+          subject: `New scanned document saved for ${matter?.title || "matter"}`,
+          body: `${file?.name || "File"} uploaded and indexed.`
+        });
+
+        persist();
+        result.style.display = "block";
+        result.textContent = `${file?.name || "Document"} added to ${matter?.title || "selected matter"} and indexed for search.`;
+        form.reset();
+      };
+    }
+
+    function bindVoice() {
+      const form = document.getElementById("voiceForm");
+      const result = document.getElementById("voiceResult");
+      const transcript = document.getElementById("voiceTranscript");
+      const startButton = document.getElementById("startDictation");
+
+      startButton.onclick = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          startButton.textContent = "Speech not supported in this browser";
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = form.language.value;
+        recognition.interimResults = true;
+        recognition.continuous = false;
+
+        startButton.textContent = "Listening...";
+
+        recognition.onresult = (event) => {
+          let text = "";
+          for (let i = event.resultIndex; i < event.results.length; i += 1) {
+            text += event.results[i][0].transcript;
+          }
+          transcript.value = `${transcript.value} ${text}`.trim();
+        };
+
+        recognition.onend = () => {
+          startButton.textContent = "Start Voice Capture";
+        };
+
+        recognition.start();
+      };
+
+      form.onsubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const matter = state.matters.find((item) => item.id === data.get("matterId"));
+
+        state.voiceNotes.unshift({
+          id: `voice-${Date.now()}`,
+          matterId: data.get("matterId"),
+          language: data.get("language"),
+          transcript: data.get("transcript")
+        });
+
+        queueMessage({
+          recipient: "Matter File",
+          channel: "Internal Log",
+          subject: `Voice note saved for ${matter?.title || "matter"}`,
+          body: String(data.get("transcript")).slice(0, 120)
+        });
+
+        persist();
+        result.style.display = "block";
+        result.textContent = `Voice case note saved under ${matter?.title || "selected matter"}.`;
+        form.reset();
+      };
+    }
+
     function bindOnboarding() {
-      const ward = document.getElementById("onboardWard");
-      const doctor = document.getElementById("onboardDoctor");
       const form = document.getElementById("onboardForm");
       const result = document.getElementById("onboardResult");
 
-      ward.onchange = () => {
-        doctor.innerHTML = `<option value="">Select doctor</option>${doctorOptions(ward.value)}`;
-      };
-
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
+      form.onsubmit = (event) => {
+        event.preventDefault();
         const data = new FormData(form);
-        const patient = {
-          id: `p${Date.now()}`,
+
+        const client = {
+          id: `c-${Date.now()}`,
           name: data.get("name"),
-          age: Number(data.get("age")),
-          ward: data.get("ward"),
-          doctorId: data.get("doctorId"),
-          consentSigned: true,
-          consentType: "Digital Signature"
+          contact: data.get("contact"),
+          matterType: data.get("matterType"),
+          intake: "Portal Form"
         };
-        state.patients.push(patient);
 
-        const email = data.get("email");
-        queueEmail({
-          to: email,
-          tag: "Welcome",
-          subject: "Busamed admission confirmation",
-          body: `Welcome ${patient.name}. Your paperless consent is captured.`
+        state.clients.push(client);
+
+        const matter = {
+          id: `m-${Date.now()}`,
+          clientId: client.id,
+          title: `${data.get("matterType")} - ${data.get("name")}`,
+          status: "Intake Complete",
+          nextDate: new Date().toISOString().slice(0, 10),
+          digitalDocs: 1,
+          source: "Online Intake"
+        };
+
+        state.matters.push(matter);
+
+        queueMessage({
+          recipient: client.contact,
+          channel: "WhatsApp",
+          subject: `Welcome ${client.name}`,
+          body: `Your legal matter has been opened. Next step: upload IDs and supporting evidence.`
         });
 
         persist();
         result.style.display = "block";
-        result.textContent = `${patient.name} onboarded paperlessly and welcome email sent to ${email}.`;
-        form.reset();
-        doctor.innerHTML = `<option value="">Select doctor</option>`;
-      };
-    }
-
-    function bindPrescription() {
-      const form = document.getElementById("rxForm");
-      const result = document.getElementById("rxResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const patient = patientById(data.get("patientId"));
-        const record = {
-          id: `rx${Date.now()}`,
-          patientId: data.get("patientId"),
-          medication: data.get("medication"),
-          dosage: data.get("dosage"),
-          nurseEmail: data.get("nurseEmail")
-        };
-        state.prescriptions.push(record);
-        queueEmail({
-          to: record.nurseEmail,
-          tag: "Prescription",
-          subject: `Medication order for ${patient?.name || "patient"}`,
-          body: `${record.medication} - ${record.dosage}`
-        });
-        persist();
-        result.style.display = "block";
-        result.textContent = `Prescription sent to ${record.nurseEmail} for ${patient?.name || "patient"}.`;
+        result.textContent = `${client.name} onboarded successfully. Matter opened and welcome message queued.`;
         form.reset();
       };
     }
 
-    function bindIssues() {
-      const form = document.getElementById("issueForm");
-      const result = document.getElementById("issueResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
+    function bindConsultations() {
+      const form = document.getElementById("meetingForm");
+      const result = document.getElementById("meetingResult");
+
+      form.onsubmit = (event) => {
+        event.preventDefault();
         const data = new FormData(form);
-        const issue = {
-          id: `is${Date.now()}`,
-          patientId: data.get("patientId"),
-          severity: data.get("severity"),
-          recipient: data.get("recipient"),
-          details: data.get("details")
+        const client = clientById(data.get("clientId"));
+
+        const meeting = {
+          id: `meet-${Date.now()}`,
+          clientId: data.get("clientId"),
+          date: data.get("date"),
+          time: data.get("time"),
+          purpose: data.get("purpose"),
+          platform: data.get("platform"),
+          link: `https://meet.demo/${Math.random().toString(36).slice(2, 9)}`
         };
-        state.issues.push(issue);
-        queueEmail({
-          to: data.get("recipientEmail"),
-          tag: "Escalation",
-          subject: `Patient issue (${issue.severity})`,
-          body: issue.details
+
+        state.meetings.unshift(meeting);
+
+        queueMessage({
+          recipient: client?.contact || "Client",
+          channel: "SMS",
+          subject: `Virtual consultation scheduled (${meeting.platform})`,
+          body: `${meeting.date} ${meeting.time} — ${meeting.link}`
         });
+
         persist();
         result.style.display = "block";
-        result.textContent = `Issue escalated to ${data.get("recipient")} and email sent.`;
-        form.reset();
-      };
-    }
-
-    function bindWards() {
-      const ward = document.getElementById("wardFilter");
-      renderWardTable(ward.value);
-      ward.onchange = () => renderWardTable(ward.value);
-    }
-
-    function bindSickNotes() {
-      const form = document.getElementById("sickForm");
-      const result = document.getElementById("sickResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const file = data.get("file");
-        const patient = patientById(data.get("patientId"));
-        state.sickNotes.push({
-          id: `sn${Date.now()}`,
-          patientId: data.get("patientId"),
-          fileName: file?.name || "unknown",
-          patientEmail: data.get("patientEmail"),
-          message: data.get("message")
-        });
-        queueEmail({
-          to: data.get("patientEmail"),
-          tag: "Sick Note",
-          subject: `Sick note from ${doctorById(patient?.doctorId)?.name || "doctor"}`,
-          body: `${data.get("message")} (Attachment: ${file?.name || "file"})`
-        });
-        persist();
-        result.style.display = "block";
-        result.textContent = `Sick note uploaded and emailed to ${data.get("patientEmail")}.`;
-        form.reset();
+        result.textContent = `Consultation scheduled for ${client?.name || "client"}; invite sent with meeting link.`;
+        render();
       };
     }
 
     function render() {
       renderNav();
+
       if (activeView === "dashboard") {
         content.innerHTML = dashboardView();
         bindDashboard();
+      } else if (activeView === "migration") {
+        content.innerHTML = migrationView();
+        bindMigration();
+      } else if (activeView === "voice") {
+        content.innerHTML = voiceView();
+        bindVoice();
       } else if (activeView === "onboarding") {
         content.innerHTML = onboardingView();
         bindOnboarding();
-      } else if (activeView === "prescriptions") {
-        content.innerHTML = prescriptionView();
-        bindPrescription();
-      } else if (activeView === "issues") {
-        content.innerHTML = issuesView();
-        bindIssues();
-      } else if (activeView === "wards") {
-        content.innerHTML = wardsView();
-        bindWards();
-      } else if (activeView === "sicknotes") {
-        content.innerHTML = sickNotesView();
-        bindSickNotes();
+      } else if (activeView === "consultations") {
+        content.innerHTML = consultationsView();
+        bindConsultations();
       } else if (activeView === "outbox") {
         content.innerHTML = outboxView();
       }
