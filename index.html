@@ -3,40 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Busamed Bloemfontein | Paperless Hospital Demo</title>
+  <title>M. Zilani Attorneys | Smart Case Portal Demo</title>
   <style>
     :root {
-      --bg: #f3f7fc;
+      --bg: #f4f2ef;
       --card: #ffffff;
-      --border: #d7e3f3;
-      --text: #1f2937;
-      --muted: #667085;
-      --primary: #155fd0;
-      --primary-dark: #124ca6;
+      --border: #e2ddd6;
+      --text: #25211c;
+      --muted: #6f665b;
+      --primary: #8d6f3a;
+      --primary-dark: #70572d;
+      --accent: #1f2937;
       --ok-bg: #ecfdf3;
       --ok-text: #05603a;
-      --chip: #e8f1ff;
-      --shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+      --warn-bg: #fff7ed;
+      --warn-text: #9a3412;
+      --chip-bg: #f0e7d8;
+      --shadow: 0 4px 14px rgba(37, 33, 28, 0.08);
     }
 
     * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
     body { margin: 0; background: var(--bg); color: var(--text); }
+    h1, h2, h3 { margin: 0; }
 
-    header {
-      background: linear-gradient(120deg, #12356f, #155fd0);
-      color: #fff;
-      padding: 1.3rem 1rem;
-    }
+    .screen { min-height: 100vh; }
 
-    h1 { margin: 0; font-size: 1.45rem; }
-    header p { margin: 0.35rem 0 0; opacity: 0.95; }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 290px 1fr;
-      gap: 1rem;
+    .login-wrap {
+      max-width: 980px;
+      margin: 2rem auto;
       padding: 1rem;
-      align-items: start;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 1rem;
     }
 
     .panel, .card {
@@ -44,551 +42,1167 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 0.95rem;
+      padding: 1rem;
     }
 
-    .panel h2, .card h2 { margin: 0 0 0.7rem; font-size: 1.05rem; }
+    .hero {
+      background: linear-gradient(120deg, var(--accent), #374151);
+      color: white;
+    }
+
+    .hero p { margin: 0.6rem 0 0; opacity: 0.95; }
+
+    .chip-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .chip { background: var(--chip-bg); color: #674c1f; border-radius: 999px; padding: 0.24rem 0.6rem; font-size: 0.76rem; }
+
+    .switch-row { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+    .switch-btn {
+      width: auto;
+      border: 1px solid var(--border);
+      background: #f9f6f0;
+      color: var(--text);
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .switch-btn.active { background: #f3e9d6; border-color: #d7c29c; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      align-items: start;
+    }
+
+    header {
+      background: linear-gradient(120deg, var(--accent), #374151);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-meta { text-align: right; font-size: 0.84rem; }
 
     .nav-list { display: grid; gap: 0.5rem; }
-
     .nav-button {
       width: 100%;
       text-align: left;
       border: 1px solid var(--border);
-      background: #f8fbff;
-      color: var(--text);
-      border-radius: 9px;
-      padding: 0.62rem;
+      background: #fbf8f3;
+      border-radius: 8px;
+      padding: 0.58rem;
       cursor: pointer;
       font-weight: 600;
     }
-
-    .nav-button.active, .nav-button:hover {
-      background: #e9f2ff;
-      border-color: #bad3fb;
-    }
-
-    .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
-    .chip { background: var(--chip); color: #1e429f; padding: 0.22rem 0.58rem; border-radius: 999px; font-size: 0.78rem; }
+    .nav-button.active, .nav-button:hover { background: #f3e9d6; border-color: #d7c29c; }
 
     .content { display: grid; gap: 1rem; }
 
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.65rem;
-    }
-
-    .kpi {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.7rem;
-      background: #f8fbff;
-    }
-
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
+    .kpi { border: 1px solid var(--border); border-radius: 10px; padding: 0.72rem; background: #faf8f4; }
     .kpi small { color: var(--muted); display: block; }
-    .kpi strong { display: block; font-size: 1.3rem; color: #0b4fbb; margin-top: 0.2rem; }
+    .kpi strong { font-size: 1.2rem; color: var(--primary-dark); }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin: 0.6rem 0 0.28rem;
-    }
-
+    label { display: block; font-weight: 600; margin: 0.56rem 0 0.26rem; font-size: 0.86rem; }
     input, select, textarea, button {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.58rem;
-      font-size: 0.93rem;
+      padding: 0.56rem;
+      font-size: 0.92rem;
     }
-
-    textarea { min-height: 84px; resize: vertical; }
+    textarea { min-height: 88px; resize: vertical; }
 
     button {
-      margin-top: 0.8rem;
       border: none;
       background: var(--primary);
-      color: #fff;
+      color: white;
       font-weight: 600;
       cursor: pointer;
+      margin-top: 0.8rem;
     }
-
     button:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #4b5563; }
+    .btn-secondary:hover { background: #374151; }
+    .btn-danger { background: #b42318; }
+    .btn-danger:hover { background: #912018; }
 
-    .result {
-      margin-top: 0.75rem;
-      display: none;
-      border: 1px solid #bdeecf;
-      background: var(--ok-bg);
-      color: var(--ok-text);
-      padding: 0.62rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
+    .result { margin-top: 0.7rem; display: none; border-radius: 8px; padding: 0.58rem; font-size: 0.9rem; }
+    .ok { background: var(--ok-bg); color: var(--ok-text); border: 1px solid #bdeecf; }
+    .warn { background: var(--warn-bg); color: var(--warn-text); border: 1px solid #fed7aa; }
+
+    .table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.88rem; }
+    .table th, .table td { border-bottom: 1px solid var(--border); text-align: left; padding: 0.5rem; vertical-align: top; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 0.8rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.6rem; }
+    .muted { color: var(--muted); font-size: 0.83rem; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      background: #eef2ff;
+      color: #3730a3;
     }
 
-    .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 0.55rem; }
-    .table th, .table td { border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; padding: 0.52rem; }
-
-    .muted { color: var(--muted); font-size: 0.86rem; }
+    .search-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      background: #fbf8f3;
+      margin-bottom: 0.5rem;
+    }
 
     @media (max-width: 980px) {
+      .login-wrap { grid-template-columns: 1fr; }
       .layout { grid-template-columns: 1fr; }
       .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .header-meta { text-align: left; }
+      header { display: grid; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Busamed Bloemfontein - Paperless Hospital System (Demo)</h1>
-    <p>Onboarding, paperless consent, prescriptions, nurse escalations, ward visibility, and digital sick notes with simulated email delivery.</p>
-  </header>
-
-  <main class="layout">
-    <aside class="panel">
-      <h2>Workflow Menu</h2>
-      <div id="navList" class="nav-list"></div>
-      <h2 style="margin-top: 1rem;">Roles</h2>
-      <div class="chips">
-        <span class="chip">Administrator</span>
-        <span class="chip">Doctor</span>
-        <span class="chip">Nurse</span>
-      </div>
-      <p class="muted" style="margin-top: 0.7rem;">Demo mode: emails are simulated and shown in Email Outbox.</p>
-    </aside>
-
-    <section id="content" class="content"></section>
-  </main>
+  <div id="loginScreen" class="screen"></div>
+  <div id="appScreen" class="screen" style="display:none;"></div>
 
   <script>
-    const STORAGE_KEY = "busamed-paperless-demo-v2";
+    const STORAGE_KEY = "mzilani-smart-portal-v2";
 
     const seed = {
-      doctors: [
-        { id: "d1", name: "Dr. L. Mokoena", ward: "Surgical" },
-        { id: "d2", name: "Dr. K. Naidoo", ward: "Maternity" },
-        { id: "d3", name: "Dr. J. Jacobs", ward: "Emergency" },
-        { id: "d4", name: "Dr. S. Dlamini", ward: "ICU" }
+      users: [
+        {
+          id: "u1",
+          name: "System Admin",
+          email: "admin@zilani.demo",
+          password: "admin123",
+          portalType: "admin",
+          role: "Administrator",
+          verified: true,
+          createdAt: new Date().toISOString(),
+          verifiedAt: new Date().toISOString()
+        },
+        {
+          id: "u2",
+          name: "M. Zilani",
+          email: "lawyer@zilani.demo",
+          password: "law123",
+          portalType: "legal",
+          role: "Attorney",
+          verified: true,
+          createdAt: new Date().toISOString(),
+          verifiedAt: new Date().toISOString()
+        }
       ],
-      patients: [
-        { id: "p1", name: "Thabo Molefe", age: 44, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
-        { id: "p2", name: "Ayanda Sithole", age: 29, ward: "Surgical", doctorId: "d1", consentSigned: true, consentType: "Digital Signature" },
-        { id: "p3", name: "Noluthando Dube", age: 31, ward: "Maternity", doctorId: "d2", consentSigned: true, consentType: "Digital Signature" }
+      clients: [
+        {
+          id: "c1",
+          fullName: "Abongile Mvovo",
+          idNumber: "9001015800088",
+          phone: "0835056400",
+          email: "abongile@example.com",
+          preferredLanguage: "isiXhosa",
+          address: "Mthatha, Eastern Cape",
+          createdAt: new Date().toISOString()
+        }
       ],
-      prescriptions: [],
-      issues: [],
-      sickNotes: [],
-      emails: []
+      matters: [
+        {
+          id: "m1",
+          caseNumber: "ECMTH-RAF-2026-0001",
+          clientId: "c1",
+          caseType: "RAF",
+          subType: "Loss of Support",
+          court: "Mthatha High Court",
+          status: "In Progress",
+          priority: "High",
+          incidentDate: "2025-10-02",
+          openedDate: "2026-01-12",
+          assignedTo: "u2",
+          lastActivityAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          docsCount: 1
+        }
+      ],
+      documents: [
+        {
+          id: "d1",
+          matterId: "m1",
+          caseNumber: "ECMTH-RAF-2026-0001",
+          clientName: "Abongile Mvovo",
+          caseType: "RAF",
+          docType: "RAF Medical Report",
+          dateOnDocument: "2025-10-03",
+          fileName: "raf-medical-report.pdf",
+          fileSize: "2.1 MB",
+          uploadedBy: "u2",
+          uploadedAt: new Date().toISOString(),
+          mappedAt: new Date().toISOString(),
+          ocrSummary: "Medical assessment confirming injuries sustained in motor vehicle accident."
+        }
+      ],
+      voiceNotes: [],
+      meetings: [],
+      invites: [],
+      comms: []
     };
 
-    const views = [
-      { id: "dashboard", label: "Hospital Dashboard" },
-      { id: "onboarding", label: "Admin: Onboard Patient" },
-      { id: "prescriptions", label: "Doctor: Prescribe Pills" },
-      { id: "issues", label: "Nurse: Log Patient Issues" },
-      { id: "wards", label: "Ward Doctor + Patients" },
-      { id: "sicknotes", label: "Doctor: Sick Notes" },
-      { id: "outbox", label: "Email Outbox" }
+    const navViews = [
+      { id: "dashboard", label: "Dashboard" },
+      { id: "intake", label: "Case Intake (SA Fields)" },
+      { id: "migration", label: "File Migration + Mapping" },
+      { id: "search", label: "Search & Filters" },
+      { id: "voice", label: "Voice Notes" },
+      { id: "consultations", label: "Consultations" },
+      { id: "users", label: "User & Role Admin", adminOnly: true },
+      { id: "comms", label: "Comms Log" }
     ];
 
-    let state = loadState();
-    let activeView = "dashboard";
+    const xhosaDictionary = {
+      "abongile": "Abongile",
+      "abongiwe": "Abongile",
+      "abom": "Abongile",
+      "abund": "Abongile",
+      "abundi": "Abongile",
+      "abongi": "Abongile",
+      "mthatha": "Mthatha",
+      "umtata": "Mthatha",
+      "xhosa": "isiXhosa",
+      "raf": "RAF",
+      "ndlovu": "Ndlovu",
+      "zilani": "Zilani"
+    };
 
-    const navList = document.getElementById("navList");
-    const content = document.getElementById("content");
+    let state = loadState();
+    let currentUser = null;
+    let activeView = "dashboard";
+    let selectedDocumentId = null;
+    let voiceRecognition = null;
+    let voiceListening = false;
+
+    const loginScreen = document.getElementById("loginScreen");
+    const appScreen = document.getElementById("appScreen");
 
     function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : structuredClone(seed);
-      } catch {
-        return structuredClone(seed);
-      }
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return structuredClone(seed);
+      try { return JSON.parse(raw); } catch { return structuredClone(seed); }
     }
 
     function persist() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function resetDemoData() {
-      state = structuredClone(seed);
-      persist();
-      render();
+    function now() {
+      return new Date().toISOString();
     }
 
-    function doctorById(id) { return state.doctors.find((d) => d.id === id); }
-    function patientById(id) { return state.patients.find((p) => p.id === id); }
-
-    function patientOptions() {
-      return state.patients.map((p) => `<option value="${p.id}">${p.name} - ${p.ward}</option>`).join("");
+    function fmt(iso) {
+      if (!iso) return "-";
+      return new Date(iso).toLocaleString();
     }
 
-    function doctorOptions(ward) {
-      return state.doctors
-        .filter((d) => !ward || d.ward === ward)
-        .map((d) => `<option value="${d.id}">${d.name} (${d.ward})</option>`)
-        .join("");
-    }
-
-    function queueEmail({ to, subject, body, tag }) {
-      state.emails.unshift({
-        id: `e${Date.now()}`,
-        to,
-        subject,
-        body,
-        tag,
-        sentAt: new Date().toLocaleString()
+    function fileToDataUrl(file) {
+      return new Promise((resolve) => {
+        if (!file) {
+          resolve("");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(file);
       });
+    }
+
+    function clientById(id) { return state.clients.find((c) => c.id === id); }
+    function userById(id) { return state.users.find((u) => u.id === id); }
+
+    function visibleViews() {
+      return navViews.filter((view) => !view.adminOnly || currentUser?.portalType === "admin");
+    }
+
+    function renderLogin(mode = "admin") {
+      loginScreen.innerHTML = `
+        <div class="login-wrap">
+          <article class="panel hero">
+            <h1>M. Zilani Attorneys — Smart Case Portal</h1>
+            <p>Paperless law-firm demo for Mthatha: secure login, role-based access, SA case onboarding, mapped file migration, smart searching, and voice notes with timestamped tracking.</p>
+            <div class="chip-row">
+              <span class="chip">Admin + Legal Login</span>
+              <span class="chip">Mobile + Laptop Friendly</span>
+              <span class="chip">RAF / Civil / Family / Labour</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <h2 style="margin-bottom:0.7rem;">Portal Login</h2>
+            <div class="switch-row">
+              <button class="switch-btn ${mode === "admin" ? "active" : ""}" id="adminModeBtn" type="button">Admin Login</button>
+              <button class="switch-btn ${mode === "legal" ? "active" : ""}" id="legalModeBtn" type="button">Lawyer/Staff Login</button>
+            </div>
+
+            <form id="loginForm">
+              <input type="hidden" name="portalType" value="${mode}" />
+              <label>Email</label>
+              <input required type="email" name="email" placeholder="name@zilani.demo" />
+              <label>Password</label>
+              <input required type="password" name="password" placeholder="Enter password" />
+              <button type="submit">Login & Open Portal</button>
+              <div id="loginResult" class="result warn"></div>
+            </form>
+            <p class="muted" style="margin-top:0.7rem;">Demo users: admin@zilani.demo / admin123 and lawyer@zilani.demo / law123.</p>
+          </article>
+        </div>
+      `;
+
+      document.getElementById("adminModeBtn").onclick = () => renderLogin("admin");
+      document.getElementById("legalModeBtn").onclick = () => renderLogin("legal");
+
+      document.getElementById("loginForm").onsubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const result = document.getElementById("loginResult");
+        const user = state.users.find((item) =>
+          item.email.toLowerCase() === String(data.get("email")).toLowerCase() &&
+          item.password === data.get("password") &&
+          item.portalType === data.get("portalType")
+        );
+
+        if (!user) {
+          result.style.display = "block";
+          result.textContent = "Invalid login details for selected portal type.";
+          return;
+        }
+
+        if (!user.verified) {
+          result.style.display = "block";
+          result.textContent = "Account not verified yet. Use invite link verification first.";
+          return;
+        }
+
+        currentUser = user;
+        activeView = "dashboard";
+        queueComms({ recipient: user.email, channel: "Audit", subject: "User Login", body: `${user.name} logged in (${user.portalType})` });
+        renderApp();
+      };
+    }
+
+    function queueComms({ recipient, channel, subject, body }) {
+      state.comms.unshift({ id: `comm-${Date.now()}-${Math.random()}`, recipient, channel, subject, body, at: now() });
       persist();
     }
 
-    function renderNav() {
-      navList.innerHTML = "";
+    function renderApp() {
+      loginScreen.style.display = "none";
+      appScreen.style.display = "block";
+      const views = visibleViews();
+
+      appScreen.innerHTML = `
+        <header>
+          <div>
+            <h1>M. Zilani Attorneys — Case Portal</h1>
+            <div class="muted" style="color:#d1d5db;">Role: ${currentUser.role} (${currentUser.portalType})</div>
+          </div>
+          <div class="header-meta">
+            <div>User: ${currentUser.name}</div>
+            <div>Login Time: ${new Date().toLocaleString()}</div>
+            <button id="logoutBtn" class="btn-danger" type="button" style="margin-top:0.4rem; width:auto; padding:0.45rem 0.7rem;">Logout</button>
+          </div>
+        </header>
+
+        <main class="layout">
+          <aside class="panel">
+            <h2>Workflow</h2>
+            <div id="navList" class="nav-list"></div>
+            <p class="muted" style="margin-top:0.8rem;">All actions are timestamped and stored in local demo data.</p>
+          </aside>
+          <section id="content" class="content"></section>
+        </main>
+      `;
+
+      const navList = document.getElementById("navList");
       views.forEach((view) => {
-        const btn = document.createElement("button");
-        btn.className = `nav-button ${activeView === view.id ? "active" : ""}`;
-        btn.textContent = view.label;
-        btn.onclick = () => {
-          activeView = view.id;
-          render();
-        };
-        navList.appendChild(btn);
+        const button = document.createElement("button");
+        button.className = `nav-button ${activeView === view.id ? "active" : ""}`;
+        button.textContent = view.label;
+        button.onclick = () => { activeView = view.id; renderApp(); };
+        navList.appendChild(button);
       });
+
+      document.getElementById("logoutBtn").onclick = () => {
+        queueComms({ recipient: currentUser.email, channel: "Audit", subject: "User Logout", body: `${currentUser.name} logged out` });
+        currentUser = null;
+        appScreen.style.display = "none";
+        loginScreen.style.display = "block";
+        renderLogin();
+      };
+
+      renderActiveView();
     }
 
     function dashboardView() {
-      const paperlessRate = state.patients.length
-        ? Math.round((state.patients.filter((p) => p.consentSigned).length / state.patients.length) * 100)
-        : 0;
+      const totalDocs = state.documents.length;
+      const openMatters = state.matters.filter((m) => m.status !== "Closed").length;
+      const pendingVerification = state.users.filter((u) => !u.verified).length;
+      const todayActivity = state.comms.filter((c) => c.at.slice(0, 10) === now().slice(0, 10)).length;
+
       return `
-      <article class="card">
-        <h2>Paperless Performance Snapshot</h2>
-        <div class="kpi-grid">
-          <div class="kpi"><small>Patients</small><strong>${state.patients.length}</strong></div>
-          <div class="kpi"><small>Consent Signed</small><strong>${paperlessRate}%</strong></div>
-          <div class="kpi"><small>Prescriptions</small><strong>${state.prescriptions.length}</strong></div>
-          <div class="kpi"><small>Emails Sent</small><strong>${state.emails.length}</strong></div>
-        </div>
-        <p class="muted" style="margin-top:0.65rem;">Designed to reduce paperwork across all wards in one hospital-wide workflow.</p>
-        <button id="resetBtn" type="button">Reset Demo Data</button>
-      </article>
-      <article class="card">
-        <h2>Current Patient Register</h2>
-        <table class="table">
-          <thead><tr><th>Patient</th><th>Ward</th><th>Doctor</th><th>Consent</th></tr></thead>
+        <article class="card">
+          <h2>Operational Snapshot</h2>
+          <div class="kpi-grid">
+            <div class="kpi"><small>Registered Users</small><strong>${state.users.length}</strong></div>
+            <div class="kpi"><small>Active Matters</small><strong>${openMatters}</strong></div>
+            <div class="kpi"><small>Mapped Documents</small><strong>${totalDocs}</strong></div>
+            <div class="kpi"><small>Today's Activity Logs</small><strong>${todayActivity}</strong></div>
+          </div>
+          <div class="muted" style="margin-top:0.6rem;">Pending user verifications: <strong>${pendingVerification}</strong></div>
+        </article>
+
+        <article class="card">
+          <h2>Cases with Status & Timestamps</h2>
+          <table class="table">
+            <thead><tr><th>Case Number</th><th>Client</th><th>Type</th><th>Status</th><th>Last Activity</th><th>Updated</th></tr></thead>
+            <tbody>
+              ${state.matters.map((matter) => `
+                <tr>
+                  <td>${matter.caseNumber}</td>
+                  <td>${clientById(matter.clientId)?.fullName || "-"}</td>
+                  <td>${matter.caseType} / ${matter.subType}</td>
+                  <td><span class="badge">${matter.status}</span></td>
+                  <td>${fmt(matter.lastActivityAt)}</td>
+                  <td>${fmt(matter.updatedAt)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </article>
+      `;
+    }
+
+    function intakeView() {
+      const legalUsers = state.users.filter((u) => u.portalType === "legal" && u.verified);
+      return `
+        <article class="card">
+          <h2>South African Case Intake Form</h2>
+          <form id="intakeForm">
+            <div class="grid-2">
+              <div>
+                <label>Client Full Name</label><input required name="fullName" />
+                <label>SA ID Number / Passport</label><input required name="idNumber" />
+                <label>Mobile Number</label><input required name="phone" />
+                <label>Email</label><input type="email" name="email" />
+                <label>Preferred Language</label>
+                <select name="preferredLanguage"><option>English</option><option>isiXhosa</option><option>Afrikaans</option><option>isiZulu</option></select>
+                <label>Physical Address</label><textarea required name="address"></textarea>
+              </div>
+              <div>
+                <label>Case Number</label><input required name="caseNumber" placeholder="e.g. ECMTH-CIV-2026-0007" />
+                <label>Case Type</label>
+                <select required name="caseType"><option>RAF</option><option>Civil</option><option>Criminal</option><option>Family</option><option>Labour</option><option>Conveyancing</option></select>
+                <label>Sub Type</label><input required name="subType" placeholder="e.g. Loss of support / Divorce / Contract dispute" />
+                <label>Court / Forum</label><input name="court" placeholder="Mthatha High Court / CCMA / Magistrates Court" />
+                <label>Priority</label><select name="priority"><option>Low</option><option>Medium</option><option>High</option><option>Urgent</option></select>
+                <label>Status</label><select name="status"><option>New</option><option>In Progress</option><option>Awaiting Documents</option><option>Awaiting Court Date</option><option>Closed</option></select>
+                <label>Incident / Cause Date</label><input type="date" name="incidentDate" />
+                <label>Assign Legal User</label>
+                <select required name="assignedTo">${legalUsers.map((u) => `<option value="${u.id}">${u.name} (${u.role})</option>`).join("")}</select>
+              </div>
+            </div>
+
+            <label>Case Summary</label><textarea required name="summary"></textarea>
+            <label>Client Consent Signature (Typed)</label><input required name="signature" />
+            <button type="submit">Save Client + Open Matter</button>
+            <div id="intakeResult" class="result ok"></div>
+          </form>
+        </article>
+      `;
+    }
+
+    function migrationView() {
+      const selectedDoc = state.documents.find((doc) => doc.id === selectedDocumentId) || state.documents[0];
+      return `
+        <article class="card">
+          <h2>File Migration + Field Mapping</h2>
+          <form id="migrationForm">
+            <div class="grid-3">
+              <div>
+                <label>Case Number</label>
+                <select required name="caseNumber">${state.matters.map((m) => `<option>${m.caseNumber}</option>`).join("")}</select>
+              </div>
+              <div>
+                <label>Document Type</label>
+                <select required name="docType"><option>Summons</option><option>Pleadings</option><option>Affidavit</option><option>RAF Medical Report</option><option>Settlement Offer</option><option>FICA</option><option>ID Copy</option><option>Power of Attorney</option></select>
+              </div>
+              <div>
+                <label>Date on Document</label>
+                <input required type="date" name="dateOnDocument" />
+              </div>
+            </div>
+
+            <label>Upload File</label><input required type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+            <label>OCR/Auto Mapped Summary</label><textarea required name="ocrSummary" placeholder="Extracted text + key fields"></textarea>
+            <button type="submit">Map and Save Document</button>
+            <div id="migrationResult" class="result ok"></div>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Mapped Documents (View / Download / Edit / Delete)</h2>
+          <table class="table">
+            <thead><tr><th>Case #</th><th>Client</th><th>Type</th><th>Document</th><th>Date on Doc</th><th>Uploaded</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${state.documents.slice(0, 12).map((d) => `<tr><td>${d.caseNumber}</td><td>${d.clientName}</td><td>${d.caseType}</td><td>${d.docType} (${d.fileName})</td><td>${d.dateOnDocument}</td><td>${fmt(d.uploadedAt)}</td><td>
+                <button data-doc-id="${d.id}" class="viewDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem;">View</button>
+                ${d.dataUrl ? ` | <a href="${d.dataUrl}" download="${d.fileName}">Download</a>` : ` | <span class="muted">Download unavailable</span>`}
+                 | <button data-doc-id="${d.id}" class="editDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem;">Edit</button>
+                 | <button data-doc-id="${d.id}" class="deleteDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem; background:#b42318;">Delete</button>
+              </td></tr>`).join("")}
+            </tbody>
+          </table>
+          <p class="muted">Tip: Click View to load full uploaded document fields and preview in the portal.</p>
+        </article>
+
+        <article class="card">
+          <h2>Selected Document Details (Portal View)</h2>
+          ${selectedDoc ? `
+            <div class="grid-3">
+              <div><strong>Case Number:</strong><br>${selectedDoc.caseNumber}</div>
+              <div><strong>Client Name:</strong><br>${selectedDoc.clientName}</div>
+              <div><strong>Case Type:</strong><br>${selectedDoc.caseType}</div>
+              <div><strong>Document Type:</strong><br>${selectedDoc.docType}</div>
+              <div><strong>Date on Document:</strong><br>${selectedDoc.dateOnDocument}</div>
+              <div><strong>File Name:</strong><br>${selectedDoc.fileName}</div>
+              <div><strong>File Size:</strong><br>${selectedDoc.fileSize || "Unknown"}</div>
+              <div><strong>Uploaded At:</strong><br>${fmt(selectedDoc.uploadedAt)}</div>
+              <div><strong>Mapped At:</strong><br>${fmt(selectedDoc.mappedAt)}</div>
+            </div>
+            <label style="margin-top:0.8rem;">OCR / Mapped Text</label>
+            <div style="border:1px solid var(--border); border-radius:8px; padding:0.6rem; background:#faf8f4;">${selectedDoc.ocrSummary || "-"}</div>
+            <label style="margin-top:0.8rem;">File Preview</label>
+            ${selectedDoc.dataUrl ? `<iframe src="${selectedDoc.dataUrl}" style="width:100%; min-height:420px; border:1px solid var(--border); border-radius:8px; background:#fff;"></iframe>` : `<div class="muted">Preview not available for this record. You can still edit fields above and re-upload a new file if needed.</div>`}
+          ` : `<p class="muted">No document selected.</p>`}
+        </article>
+
+        <article class="card">
+          <h2>Edit Mapped Document Details</h2>
+          ${selectedDoc ? `
+          <form id="editDocForm">
+            <input type="hidden" name="docId" value="${selectedDoc.id}" />
+            <div class="grid-3">
+              <div><label>Case Number</label><input required name="caseNumber" value="${selectedDoc.caseNumber}" /></div>
+              <div><label>Client Name</label><input required name="clientName" value="${selectedDoc.clientName}" /></div>
+              <div><label>Case Type</label><select name="caseType"><option ${selectedDoc.caseType === "RAF" ? "selected" : ""}>RAF</option><option ${selectedDoc.caseType === "Civil" ? "selected" : ""}>Civil</option><option ${selectedDoc.caseType === "Criminal" ? "selected" : ""}>Criminal</option><option ${selectedDoc.caseType === "Family" ? "selected" : ""}>Family</option><option ${selectedDoc.caseType === "Labour" ? "selected" : ""}>Labour</option><option ${selectedDoc.caseType === "Conveyancing" ? "selected" : ""}>Conveyancing</option></select></div>
+              <div><label>Document Type</label><input required name="docType" value="${selectedDoc.docType}" /></div>
+              <div><label>Date on Document</label><input required type="date" name="dateOnDocument" value="${selectedDoc.dateOnDocument}" /></div>
+              <div><label>File Name</label><input required name="fileName" value="${selectedDoc.fileName}" /></div>
+            </div>
+            <label>OCR Summary / Notes</label>
+            <textarea required name="ocrSummary">${selectedDoc.ocrSummary || ""}</textarea>
+            <button type="submit">Save Corrections</button>
+            <div id="editDocResult" class="result ok"></div>
+          </form>` : `<p class="muted">No document selected.</p>`}
+        </article>
+      `;
+    }
+
+    function searchView() {
+      return `
+        <article class="card">
+          <h2>Search Files by Name, Case Number, Date, Type</h2>
+          <div class="search-box">
+            <div class="grid-3">
+              <div><label>Keyword (person/case/file)</label><input id="qKeyword" placeholder="Abongile or ECMTH-RAF..." /></div>
+              <div><label>Case Type</label><select id="qCaseType"><option value="">All</option><option>RAF</option><option>Civil</option><option>Criminal</option><option>Family</option><option>Labour</option><option>Conveyancing</option></select></div>
+              <div><label>Document Type</label><input id="qDocType" placeholder="Affidavit / FICA" /></div>
+              <div><label>Date From</label><input id="qFrom" type="date" /></div>
+              <div><label>Date To</label><input id="qTo" type="date" /></div>
+              <div><label>Case Status</label><select id="qStatus"><option value="">All</option><option>New</option><option>In Progress</option><option>Awaiting Documents</option><option>Awaiting Court Date</option><option>Closed</option></select></div>
+            </div>
+            <button id="runSearch" type="button">Run Search</button>
+          </div>
+
+          <div id="searchResults"></div>
+        </article>
+      `;
+    }
+
+    function removeRepeatedPhrases(words) {
+      const cleaned = [];
+      let i = 0;
+      while (i < words.length) {
+        let skipped = false;
+        for (let size = Math.min(6, Math.floor((words.length - i) / 2)); size >= 2; size -= 1) {
+          const first = words.slice(i, i + size).map((w) => w.toLowerCase());
+          const second = words.slice(i + size, i + (size * 2)).map((w) => w.toLowerCase());
+          if (first.join(" ") === second.join(" ")) {
+            cleaned.push(...words.slice(i, i + size));
+            while (i + (size * 2) <= words.length) {
+              const left = words.slice(i, i + size).map((w) => w.toLowerCase()).join(" ");
+              const right = words.slice(i + size, i + (size * 2)).map((w) => w.toLowerCase()).join(" ");
+              if (left !== right) break;
+              i += size;
+            }
+            i += size;
+            skipped = true;
+            break;
+          }
+        }
+        if (!skipped) {
+          cleaned.push(words[i]);
+          i += 1;
+        }
+      }
+      return cleaned;
+    }
+
+    function normalizeTranscript(text) {
+      if (!text) return "";
+      const normalized = text
+        .replace(/\s+/g, " ")
+        .replace(/(my\s+name\s+is)(\s+\1)+/gi, "$1")
+        .trim();
+
+      const words = normalized.split(/\s+/).filter(Boolean);
+      const dedupedSingles = [];
+      for (const word of words) {
+        const prev = dedupedSingles[dedupedSingles.length - 1]?.toLowerCase();
+        if (prev === word.toLowerCase()) continue;
+        dedupedSingles.push(word);
+      }
+
+      const dedupedPhrases = removeRepeatedPhrases(dedupedSingles);
+      const corrected = dedupedPhrases.map((word) => {
+        const clean = word.toLowerCase().replace(/[^a-z]/g, "");
+        if (xhosaDictionary[clean]) return xhosaDictionary[clean];
+        if (clean.startsWith("abo") || clean.startsWith("abun") || clean.startsWith("abom")) return "Abongile";
+        return word;
+      });
+
+      const secondPass = removeRepeatedPhrases(corrected);
+      return secondPass.join(" ");
+    }
+
+    function voiceView() {
+      return `
+        <article class="card">
+          <h2>Voice Case Notes (Improved for isiXhosa Names)</h2>
+          <form id="voiceForm">
+            <label>Case Number</label>
+            <select required name="caseNumber">${state.matters.map((m) => `<option>${m.caseNumber}</option>`).join("")}</select>
+            <label>Language</label>
+            <select name="language"><option value="en-ZA">English (South Africa)</option><option value="xh-ZA">isiXhosa (South Africa)</option></select>
+            <button type="button" id="startVoice" class="btn-secondary">Start Voice Capture</button>
+            <label>Transcript</label>
+            <textarea required id="voiceText" name="transcript" placeholder="Speak naturally. The system removes repeated words and applies Xhosa-name corrections."></textarea>
+            <button type="button" id="cleanVoice" class="btn-secondary">Clean Transcript (remove repeats + fix names)</button>
+            <button type="submit">Save Voice Note</button>
+            <div id="voiceResult" class="result ok"></div>
+          </form>
+          <p class="muted" style="margin-top:0.5rem;">Tip: If browser speech recognition fails, paste text from Gemini, then click “Clean Transcript”.</p>
+        </article>
+      `;
+    }
+
+    function consultationsView() {
+      return `
+        <article class="card">
+          <h2>Virtual Consultations</h2>
+          <form id="meetingForm">
+            <div class="grid-3">
+              <div><label>Client</label><select required name="clientId">${state.clients.map((c) => `<option value="${c.id}">${c.fullName}</option>`).join("")}</select></div>
+              <div><label>Date</label><input required type="date" name="date" /></div>
+              <div><label>Time</label><input required type="time" name="time" /></div>
+              <div><label>Platform</label><select name="platform"><option>Google Meet</option><option>Zoom</option><option>Microsoft Teams</option><option>WhatsApp Video</option></select></div>
+              <div><label>Purpose</label><input required name="purpose" /></div>
+              <div><label>Related Case #</label><select name="caseNumber">${state.matters.map((m) => `<option>${m.caseNumber}</option>`).join("")}</select></div>
+            </div>
+            <button type="submit">Schedule Meeting</button>
+            <div id="meetingResult" class="result ok"></div>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Upcoming Meetings</h2>
+          <table class="table"><thead><tr><th>When</th><th>Client</th><th>Case #</th><th>Platform</th><th>Link</th><th>Created</th></tr></thead>
           <tbody>
-            ${state.patients.map((p) => `<tr><td>${p.name} (Age ${p.age})</td><td>${p.ward}</td><td>${doctorById(p.doctorId)?.name || "Unassigned"}</td><td>${p.consentSigned ? "Signed" : "Pending"}</td></tr>`).join("")}
-          </tbody>
-        </table>
-      </article>`;
+            ${state.meetings.length ? state.meetings.map((m) => `<tr><td>${m.date} ${m.time}</td><td>${clientById(m.clientId)?.fullName || "-"}</td><td>${m.caseNumber}</td><td>${m.platform}</td><td><a href="${m.link}" target="_blank">${m.link}</a></td><td>${fmt(m.createdAt)}</td></tr>`).join("") : `<tr><td colspan="6">No meetings.</td></tr>`}
+          </tbody></table>
+        </article>
+      `;
     }
 
-    function onboardingView() {
+    function usersView() {
       return `
-      <article class="card">
-        <h2>Administrator Onboarding (No Paper Forms)</h2>
-        <form id="onboardForm">
-          <label>Patient full name</label>
-          <input required name="name" placeholder="e.g. Lerato Motaung" />
+        <article class="card">
+          <h2>Admin: Register Users + Assign Roles + Verification Link</h2>
+          <form id="userForm">
+            <div class="grid-3">
+              <div><label>Full Name</label><input required name="name" /></div>
+              <div><label>Email</label><input required type="email" name="email" /></div>
+              <div><label>Temporary Password</label><input required name="password" /></div>
+              <div><label>Portal Type</label><select required name="portalType"><option value="admin">Admin</option><option value="legal">Legal Portal</option></select></div>
+              <div><label>Role</label><select required name="role"><option>Administrator</option><option>Attorney</option><option>Advocate</option><option>Paralegal</option><option>Candidate Attorney</option></select></div>
+              <div><label>Phone</label><input name="phone" /></div>
+            </div>
+            <button type="submit">Register & Send Verification Link</button>
+            <div id="userResult" class="result ok"></div>
+          </form>
+        </article>
 
-          <label>Age</label>
-          <input required type="number" min="0" max="120" name="age" />
+        <article class="card">
+          <h2>Registered Users</h2>
+          <table class="table"><thead><tr><th>Name</th><th>Email</th><th>Portal</th><th>Role</th><th>Status</th><th>Created</th><th>Verified</th></tr></thead>
+          <tbody>${state.users.map((u) => `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.portalType}</td><td>${u.role}</td><td>${u.verified ? "Verified" : "Pending"}</td><td>${fmt(u.createdAt)}</td><td>${fmt(u.verifiedAt)}</td></tr>`).join("")}</tbody></table>
+        </article>
 
-          <label>Ward</label>
-          <select required name="ward" id="onboardWard">
-            <option value="">Select ward</option>
-            <option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option>
-          </select>
-
-          <label>Assign doctor</label>
-          <select required name="doctorId" id="onboardDoctor"><option value="">Select doctor</option></select>
-
-          <label>Patient email</label>
-          <input required type="email" name="email" placeholder="patient@email.com" />
-
-          <label>Consent capture (paperless signature)</label>
-          <input required name="signature" placeholder="Type patient's full name as digital signature" />
-
-          <button type="submit">Create Patient & Send Welcome Email</button>
-          <div id="onboardResult" class="result"></div>
-        </form>
-      </article>`;
-    }
-
-    function prescriptionView() {
-      return `
-      <article class="card">
-        <h2>Doctor Prescription (Pills) -> Nurse Email</h2>
-        <form id="rxForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
-
-          <label>Medication / Pills</label>
-          <input required name="medication" placeholder="e.g. Amoxicillin 500mg capsules" />
-
-          <label>Dosage</label>
-          <textarea required name="dosage" placeholder="1 capsule every 8 hours for 5 days"></textarea>
-
-          <label>Nurse email</label>
-          <input required type="email" name="nurseEmail" placeholder="nurse.surgical@busamed.demo" />
-
-          <button type="submit">Send Prescription</button>
-          <div id="rxResult" class="result"></div>
-        </form>
-      </article>`;
-    }
-
-    function issuesView() {
-      return `
-      <article class="card">
-        <h2>Nurse Issues & Escalation</h2>
-        <form id="issueForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
-
-          <label>Severity</label>
-          <select required name="severity"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
-
-          <label>Send to relevant person/team</label>
-          <input required name="recipient" placeholder="e.g. Surgical Lead / Dr. Mokoena" />
-
-          <label>Recipient email</label>
-          <input required type="email" name="recipientEmail" placeholder="recipient@busamed.demo" />
-
-          <label>Issue details</label>
-          <textarea required name="details" placeholder="Describe concern"></textarea>
-
-          <button type="submit">Escalate Issue</button>
-          <div id="issueResult" class="result"></div>
-        </form>
-      </article>`;
-    }
-
-    function wardsView() {
-      return `
-      <article class="card">
-        <h2>Ward Allocation View</h2>
-        <label>Select ward</label>
-        <select id="wardFilter"><option>Surgical</option><option>Maternity</option><option>Emergency</option><option>ICU</option></select>
-        <div id="wardTableWrap"></div>
-      </article>`;
-    }
-
-    function sickNotesView() {
-      return `
-      <article class="card">
-        <h2>Doctor Sick Notes Upload + Email Patient</h2>
-        <form id="sickForm">
-          <label>Patient</label>
-          <select required name="patientId">${patientOptions()}</select>
-
-          <label>Patient email</label>
-          <input required type="email" name="patientEmail" placeholder="patient@email.com" />
-
-          <label>Sick note file</label>
-          <input required type="file" name="file" accept=".pdf,.jpg,.png,.doc,.docx" />
-
-          <label>Doctor message</label>
-          <textarea required name="message" placeholder="Recovery advice and return date"></textarea>
-
-          <button type="submit">Upload & Send Sick Note</button>
-          <div id="sickResult" class="result"></div>
-        </form>
-      </article>`;
-    }
-
-    function outboxView() {
-      return `
-      <article class="card">
-        <h2>Email Outbox (Simulated)</h2>
-        <table class="table">
-          <thead><tr><th>Time</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
+        <article class="card">
+          <h2>Pending Invites (Simulate verify completion)</h2>
+          <table class="table"><thead><tr><th>User</th><th>Invite Link</th><th>Sent</th><th>Action</th></tr></thead>
           <tbody>
-            ${state.emails.length ? state.emails.map((e) => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.tag}</td><td>${e.subject}</td></tr>`).join("") : `<tr><td colspan="4">No emails sent yet.</td></tr>`}
-          </tbody>
-        </table>
-      </article>`;
+            ${state.invites.filter((i) => !i.completed).length ? state.invites.filter((i) => !i.completed).map((invite) => `
+              <tr>
+                <td>${userById(invite.userId)?.name || "-"}</td>
+                <td>${invite.link}</td>
+                <td>${fmt(invite.sentAt)}</td>
+                <td><button data-invite="${invite.id}" class="completeInviteBtn" type="button" style="margin:0; width:auto; padding:0.35rem 0.55rem;">Complete Verification</button></td>
+              </tr>
+            `).join("") : `<tr><td colspan="4">No pending invites.</td></tr>`}
+          </tbody></table>
+        </article>
+      `;
     }
 
-    function renderWardTable(ward) {
-      const doctors = state.doctors.filter((d) => d.ward === ward);
-      const rows = doctors.map((doc) => {
-        const pts = state.patients.filter((p) => p.doctorId === doc.id);
-        return `<tr><td>${doc.name}</td><td>${doc.ward}</td><td>${pts.length ? pts.map((p) => `${p.name} (Age ${p.age})`).join("<br>") : "No patients"}</td></tr>`;
-      }).join("");
-      document.getElementById("wardTableWrap").innerHTML = `
-        <table class="table">
-          <thead><tr><th>Doctor</th><th>Ward</th><th>Assigned patients</th></tr></thead>
-          <tbody>${rows || `<tr><td colspan="3">No doctors in this ward.</td></tr>`}</tbody>
-        </table>`;
+    function commsView() {
+      return `
+        <article class="card">
+          <h2>Communication / Audit Timeline</h2>
+          <table class="table">
+            <thead><tr><th>Timestamp</th><th>Recipient</th><th>Channel</th><th>Subject</th><th>Message</th></tr></thead>
+            <tbody>${state.comms.length ? state.comms.map((c) => `<tr><td>${fmt(c.at)}</td><td>${c.recipient}</td><td>${c.channel}</td><td>${c.subject}</td><td>${c.body}</td></tr>`).join("") : `<tr><td colspan="5">No logs yet.</td></tr>`}</tbody>
+          </table>
+        </article>
+      `;
     }
 
-    function bindDashboard() {
-      document.getElementById("resetBtn").onclick = resetDemoData;
+    function renderActiveView() {
+      const content = document.getElementById("content");
+      if (!content) return;
+
+      if (activeView === "dashboard") content.innerHTML = dashboardView();
+      if (activeView === "intake") content.innerHTML = intakeView();
+      if (activeView === "migration") content.innerHTML = migrationView();
+      if (activeView === "search") content.innerHTML = searchView();
+      if (activeView === "voice") content.innerHTML = voiceView();
+      if (activeView === "consultations") content.innerHTML = consultationsView();
+      if (activeView === "users") content.innerHTML = usersView();
+      if (activeView === "comms") content.innerHTML = commsView();
+
+      bindViewEvents();
     }
 
-    function bindOnboarding() {
-      const ward = document.getElementById("onboardWard");
-      const doctor = document.getElementById("onboardDoctor");
-      const form = document.getElementById("onboardForm");
-      const result = document.getElementById("onboardResult");
+    function bindViewEvents() {
+      const intakeForm = document.getElementById("intakeForm");
+      if (intakeForm) {
+        intakeForm.onsubmit = (event) => {
+          event.preventDefault();
+          const data = new FormData(intakeForm);
 
-      ward.onchange = () => {
-        doctor.innerHTML = `<option value="">Select doctor</option>${doctorOptions(ward.value)}`;
-      };
+          const client = {
+            id: `c-${Date.now()}`,
+            fullName: data.get("fullName"),
+            idNumber: data.get("idNumber"),
+            phone: data.get("phone"),
+            email: data.get("email"),
+            preferredLanguage: data.get("preferredLanguage"),
+            address: data.get("address"),
+            createdAt: now()
+          };
 
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const patient = {
-          id: `p${Date.now()}`,
-          name: data.get("name"),
-          age: Number(data.get("age")),
-          ward: data.get("ward"),
-          doctorId: data.get("doctorId"),
-          consentSigned: true,
-          consentType: "Digital Signature"
+          state.clients.push(client);
+
+          state.matters.unshift({
+            id: `m-${Date.now()}`,
+            caseNumber: data.get("caseNumber"),
+            clientId: client.id,
+            caseType: data.get("caseType"),
+            subType: data.get("subType"),
+            court: data.get("court"),
+            status: data.get("status"),
+            priority: data.get("priority"),
+            incidentDate: data.get("incidentDate"),
+            openedDate: now().slice(0, 10),
+            assignedTo: data.get("assignedTo"),
+            lastActivityAt: now(),
+            createdAt: now(),
+            updatedAt: now(),
+            docsCount: 0,
+            summary: data.get("summary"),
+            signature: data.get("signature")
+          });
+
+          queueComms({ recipient: data.get("phone") || data.get("email"), channel: "WhatsApp", subject: "Matter Opened", body: `Case ${data.get("caseNumber")} created.` });
+          persist();
+          const result = document.getElementById("intakeResult");
+          result.style.display = "block";
+          result.textContent = `Client and case saved successfully with status ${data.get("status")}.`;
+          intakeForm.reset();
         };
-        state.patients.push(patient);
+      }
 
-        const email = data.get("email");
-        queueEmail({
-          to: email,
-          tag: "Welcome",
-          subject: "Busamed admission confirmation",
-          body: `Welcome ${patient.name}. Your paperless consent is captured.`
-        });
+      const migrationForm = document.getElementById("migrationForm");
+      if (migrationForm) {
+        migrationForm.onsubmit = async (event) => {
+          event.preventDefault();
+          const data = new FormData(migrationForm);
+          const caseNumber = String(data.get("caseNumber"));
+          const matter = state.matters.find((m) => m.caseNumber === caseNumber);
+          const client = clientById(matter?.clientId);
+          const file = data.get("file");
+          const dataUrl = await fileToDataUrl(file);
 
-        persist();
-        result.style.display = "block";
-        result.textContent = `${patient.name} onboarded paperlessly and welcome email sent to ${email}.`;
-        form.reset();
-        doctor.innerHTML = `<option value="">Select doctor</option>`;
-      };
-    }
+          const newDocument = {
+            id: `d-${Date.now()}`,
+            matterId: matter?.id,
+            caseNumber,
+            clientName: client?.fullName || "Unknown",
+            caseType: matter?.caseType || "Unknown",
+            docType: data.get("docType"),
+            dateOnDocument: data.get("dateOnDocument"),
+            fileName: file?.name || "unknown",
+            fileSize: file?.size ? `${Math.max(1, Math.round(file.size / 1024))} KB` : "Unknown",
+            uploadedBy: currentUser.id,
+            uploadedAt: now(),
+            mappedAt: now(),
+            ocrSummary: data.get("ocrSummary"),
+            dataUrl
+          };
+          state.documents.unshift(newDocument);
+          selectedDocumentId = newDocument.id;
 
-    function bindPrescription() {
-      const form = document.getElementById("rxForm");
-      const result = document.getElementById("rxResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const patient = patientById(data.get("patientId"));
-        const record = {
-          id: `rx${Date.now()}`,
-          patientId: data.get("patientId"),
-          medication: data.get("medication"),
-          dosage: data.get("dosage"),
-          nurseEmail: data.get("nurseEmail")
+          if (matter) {
+            matter.docsCount += 1;
+            matter.lastActivityAt = now();
+            matter.updatedAt = now();
+          }
+
+          queueComms({ recipient: "Internal Team", channel: "Email", subject: `Document mapped for ${caseNumber}`, body: `${file?.name || "File"} saved and indexed.` });
+          persist();
+          const result = document.getElementById("migrationResult");
+          result.style.display = "block";
+          result.textContent = `File mapped to case ${caseNumber}. Search index updated.`;
+          renderApp();
         };
-        state.prescriptions.push(record);
-        queueEmail({
-          to: record.nurseEmail,
-          tag: "Prescription",
-          subject: `Medication order for ${patient?.name || "patient"}`,
-          body: `${record.medication} - ${record.dosage}`
-        });
-        persist();
-        result.style.display = "block";
-        result.textContent = `Prescription sent to ${record.nurseEmail} for ${patient?.name || "patient"}.`;
-        form.reset();
-      };
-    }
 
-    function bindIssues() {
-      const form = document.getElementById("issueForm");
-      const result = document.getElementById("issueResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const issue = {
-          id: `is${Date.now()}`,
-          patientId: data.get("patientId"),
-          severity: data.get("severity"),
-          recipient: data.get("recipient"),
-          details: data.get("details")
+        document.querySelectorAll(".editDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            selectedDocumentId = btn.getAttribute("data-doc-id");
+            renderApp();
+          };
+        });
+
+        document.querySelectorAll(".viewDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            selectedDocumentId = btn.getAttribute("data-doc-id");
+            renderApp();
+          };
+        });
+
+        document.querySelectorAll(".deleteDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            const docId = btn.getAttribute("data-doc-id");
+            const index = state.documents.findIndex((item) => item.id === docId);
+            if (index < 0) return;
+            const [removed] = state.documents.splice(index, 1);
+            if (selectedDocumentId === docId) {
+              selectedDocumentId = state.documents[0]?.id || null;
+            }
+            queueComms({ recipient: "Internal Team", channel: "Audit", subject: `Document deleted (${removed.caseNumber})`, body: `${removed.fileName} removed by ${currentUser.name}.` });
+            persist();
+            renderApp();
+          };
+        });
+
+        const editDocForm = document.getElementById("editDocForm");
+        if (editDocForm) {
+          editDocForm.onsubmit = (event) => {
+            event.preventDefault();
+            const data = new FormData(editDocForm);
+            const doc = state.documents.find((item) => item.id === data.get("docId"));
+            if (!doc) return;
+
+            doc.caseNumber = String(data.get("caseNumber"));
+            doc.clientName = String(data.get("clientName"));
+            doc.caseType = String(data.get("caseType"));
+            doc.docType = String(data.get("docType"));
+            doc.dateOnDocument = String(data.get("dateOnDocument"));
+            doc.fileName = String(data.get("fileName"));
+            doc.ocrSummary = String(data.get("ocrSummary"));
+            doc.mappedAt = now();
+
+            const linkedMatter = state.matters.find((m) => m.caseNumber === doc.caseNumber);
+            if (linkedMatter) {
+              linkedMatter.caseType = doc.caseType;
+              linkedMatter.updatedAt = now();
+              linkedMatter.lastActivityAt = now();
+            }
+
+            queueComms({ recipient: "Internal Team", channel: "Audit", subject: `Document corrected (${doc.caseNumber})`, body: `${doc.fileName} metadata updated by ${currentUser.name}.` });
+            persist();
+            const result = document.getElementById("editDocResult");
+            result.style.display = "block";
+            result.textContent = "Document details corrected and saved.";
+            renderApp();
+          };
+        }
+      }
+
+      const runSearch = document.getElementById("runSearch");
+      if (runSearch) {
+        runSearch.onclick = () => {
+          const keyword = document.getElementById("qKeyword").value.trim().toLowerCase();
+          const caseType = document.getElementById("qCaseType").value;
+          const docType = document.getElementById("qDocType").value.trim().toLowerCase();
+          const from = document.getElementById("qFrom").value;
+          const to = document.getElementById("qTo").value;
+          const status = document.getElementById("qStatus").value;
+
+          const results = state.documents.filter((doc) => {
+            const matter = state.matters.find((m) => m.caseNumber === doc.caseNumber);
+            const inKeyword = !keyword || [doc.clientName, doc.caseNumber, doc.fileName, doc.ocrSummary].join(" ").toLowerCase().includes(keyword);
+            const inCaseType = !caseType || doc.caseType === caseType;
+            const inDocType = !docType || doc.docType.toLowerCase().includes(docType);
+            const inFrom = !from || doc.dateOnDocument >= from;
+            const inTo = !to || doc.dateOnDocument <= to;
+            const inStatus = !status || matter?.status === status;
+            return inKeyword && inCaseType && inDocType && inFrom && inTo && inStatus;
+          });
+
+          document.getElementById("searchResults").innerHTML = `
+            <p class="muted">Found ${results.length} result(s).</p>
+            <table class="table"><thead><tr><th>Case #</th><th>Client</th><th>Case Type</th><th>Doc Type</th><th>Date</th><th>Mapped At</th></tr></thead>
+            <tbody>${results.length ? results.map((doc) => `<tr><td>${doc.caseNumber}</td><td>${doc.clientName}</td><td>${doc.caseType}</td><td>${doc.docType}</td><td>${doc.dateOnDocument}</td><td>${fmt(doc.mappedAt)}</td></tr>`).join("") : `<tr><td colspan="6">No files match your filters.</td></tr>`}</tbody>
+            </table>
+          `;
         };
-        state.issues.push(issue);
-        queueEmail({
-          to: data.get("recipientEmail"),
-          tag: "Escalation",
-          subject: `Patient issue (${issue.severity})`,
-          body: issue.details
-        });
-        persist();
-        result.style.display = "block";
-        result.textContent = `Issue escalated to ${data.get("recipient")} and email sent.`;
-        form.reset();
-      };
-    }
+      }
 
-    function bindWards() {
-      const ward = document.getElementById("wardFilter");
-      renderWardTable(ward.value);
-      ward.onchange = () => renderWardTable(ward.value);
-    }
+      const voiceForm = document.getElementById("voiceForm");
+      if (voiceForm) {
+        const startVoice = document.getElementById("startVoice");
+        const cleanVoice = document.getElementById("cleanVoice");
+        const voiceText = document.getElementById("voiceText");
+        const voiceResult = document.getElementById("voiceResult");
 
-    function bindSickNotes() {
-      const form = document.getElementById("sickForm");
-      const result = document.getElementById("sickResult");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        const data = new FormData(form);
-        const file = data.get("file");
-        const patient = patientById(data.get("patientId"));
-        state.sickNotes.push({
-          id: `sn${Date.now()}`,
-          patientId: data.get("patientId"),
-          fileName: file?.name || "unknown",
-          patientEmail: data.get("patientEmail"),
-          message: data.get("message")
-        });
-        queueEmail({
-          to: data.get("patientEmail"),
-          tag: "Sick Note",
-          subject: `Sick note from ${doctorById(patient?.doctorId)?.name || "doctor"}`,
-          body: `${data.get("message")} (Attachment: ${file?.name || "file"})`
-        });
-        persist();
-        result.style.display = "block";
-        result.textContent = `Sick note uploaded and emailed to ${data.get("patientEmail")}.`;
-        form.reset();
-      };
-    }
+        cleanVoice.onclick = () => {
+          voiceText.value = normalizeTranscript(voiceText.value);
+        };
 
-    function render() {
-      renderNav();
-      if (activeView === "dashboard") {
-        content.innerHTML = dashboardView();
-        bindDashboard();
-      } else if (activeView === "onboarding") {
-        content.innerHTML = onboardingView();
-        bindOnboarding();
-      } else if (activeView === "prescriptions") {
-        content.innerHTML = prescriptionView();
-        bindPrescription();
-      } else if (activeView === "issues") {
-        content.innerHTML = issuesView();
-        bindIssues();
-      } else if (activeView === "wards") {
-        content.innerHTML = wardsView();
-        bindWards();
-      } else if (activeView === "sicknotes") {
-        content.innerHTML = sickNotesView();
-        bindSickNotes();
-      } else if (activeView === "outbox") {
-        content.innerHTML = outboxView();
+        startVoice.onclick = () => {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SpeechRecognition) {
+            voiceResult.style.display = "block";
+            voiceResult.className = "result warn";
+            voiceResult.textContent = "Speech recognition not supported in this browser. Paste transcript and click Clean Transcript.";
+            return;
+          }
+
+          if (voiceListening && voiceRecognition) {
+            voiceListening = false;
+            startVoice.textContent = "Start Voice Capture";
+            voiceResult.style.display = "block";
+            voiceResult.className = "result ok";
+            voiceResult.textContent = "Voice capture stopped.";
+            voiceRecognition.stop();
+            return;
+          }
+
+          const recognition = new SpeechRecognition();
+          const formData = new FormData(voiceForm);
+          recognition.lang = formData.get("language");
+          recognition.interimResults = true;
+          recognition.continuous = true;
+          voiceRecognition = recognition;
+          voiceListening = true;
+          startVoice.textContent = "Stop Voice Capture";
+          voiceResult.style.display = "block";
+          voiceResult.className = "result ok";
+          voiceResult.textContent = "Listening... keep speaking. Click Stop Voice Capture when finished.";
+
+          recognition.onresult = (event) => {
+            let finalText = "";
+            let interimText = "";
+            for (let i = event.resultIndex; i < event.results.length; i += 1) {
+              const chunk = event.results[i][0].transcript;
+              if (event.results[i].isFinal) {
+                finalText += ` ${chunk}`;
+              } else {
+                interimText += ` ${chunk}`;
+              }
+            }
+
+            if (finalText.trim()) {
+              const combined = `${voiceText.value} ${finalText}`.replace(/\s+/g, " ").trim();
+              voiceText.value = combined;
+            }
+
+            if (interimText.trim()) {
+              voiceResult.style.display = "block";
+              voiceResult.className = "result ok";
+              voiceResult.textContent = `Listening... ${interimText.trim()}`;
+            }
+          };
+
+          recognition.onerror = () => {
+            voiceResult.style.display = "block";
+            voiceResult.className = "result warn";
+            voiceResult.textContent = "Microphone error detected. You can retry or paste text and clean it.";
+          };
+
+          recognition.onend = () => {
+            if (voiceListening) {
+              try {
+                recognition.start();
+                return;
+              } catch {
+                // If immediate restart fails, fall through and reset button.
+              }
+            }
+            startVoice.textContent = "Start Voice Capture";
+            voiceListening = false;
+            voiceRecognition = null;
+          };
+
+          recognition.start();
+        };
+
+        voiceForm.onsubmit = (event) => {
+          event.preventDefault();
+          const data = new FormData(voiceForm);
+          const clean = normalizeTranscript(String(data.get("transcript")));
+          const matter = state.matters.find((m) => m.caseNumber === data.get("caseNumber"));
+
+          if (voiceListening && voiceRecognition) {
+            voiceListening = false;
+            voiceRecognition.stop();
+          }
+
+          state.voiceNotes.unshift({
+            id: `v-${Date.now()}`,
+            caseNumber: data.get("caseNumber"),
+            language: data.get("language"),
+            transcript: clean,
+            createdAt: now(),
+            createdBy: currentUser.id
+          });
+
+          if (matter) {
+            matter.lastActivityAt = now();
+            matter.updatedAt = now();
+          }
+
+          queueComms({ recipient: "Matter Timeline", channel: "Internal", subject: `Voice note added (${data.get("caseNumber")})`, body: clean.slice(0, 140) });
+          persist();
+          voiceResult.style.display = "block";
+          voiceResult.className = "result ok";
+          voiceResult.textContent = "Voice note saved with cleaned transcript and timestamp.";
+          voiceText.value = clean;
+        };
+      }
+
+      const meetingForm = document.getElementById("meetingForm");
+      if (meetingForm) {
+        meetingForm.onsubmit = (event) => {
+          event.preventDefault();
+          const data = new FormData(meetingForm);
+          const client = clientById(data.get("clientId"));
+          const meeting = {
+            id: `meet-${Date.now()}`,
+            clientId: data.get("clientId"),
+            caseNumber: data.get("caseNumber"),
+            date: data.get("date"),
+            time: data.get("time"),
+            platform: data.get("platform"),
+            purpose: data.get("purpose"),
+            link: `https://meet.demo/${Math.random().toString(36).slice(2, 9)}`,
+            createdAt: now()
+          };
+          state.meetings.unshift(meeting);
+          queueComms({ recipient: client?.phone || client?.email, channel: "SMS", subject: `Consultation ${meeting.date} ${meeting.time}`, body: `${meeting.platform} link: ${meeting.link}` });
+          persist();
+          const result = document.getElementById("meetingResult");
+          result.style.display = "block";
+          result.textContent = `Meeting scheduled and notification sent to ${client?.fullName || "client"}.`;
+          renderApp();
+        };
+      }
+
+      const userForm = document.getElementById("userForm");
+      if (userForm) {
+        userForm.onsubmit = (event) => {
+          event.preventDefault();
+          const data = new FormData(userForm);
+          const user = {
+            id: `u-${Date.now()}`,
+            name: data.get("name"),
+            email: data.get("email"),
+            password: data.get("password"),
+            portalType: data.get("portalType"),
+            role: data.get("role"),
+            phone: data.get("phone"),
+            verified: false,
+            createdAt: now(),
+            verifiedAt: null
+          };
+          state.users.push(user);
+
+          const invite = {
+            id: `inv-${Date.now()}`,
+            userId: user.id,
+            link: `https://portal.zilani.demo/verify/${Math.random().toString(36).slice(2, 10)}`,
+            sentAt: now(),
+            completed: false,
+            completedAt: null
+          };
+          state.invites.unshift(invite);
+
+          queueComms({ recipient: user.email, channel: "Email", subject: "Verify your portal account", body: `Complete profile via ${invite.link}` });
+          persist();
+          const result = document.getElementById("userResult");
+          result.style.display = "block";
+          result.textContent = `${user.name} registered. Verification link sent.`;
+          renderApp();
+        };
+
+        document.querySelectorAll(".completeInviteBtn").forEach((btn) => {
+          btn.onclick = () => {
+            const inviteId = btn.getAttribute("data-invite");
+            const invite = state.invites.find((item) => item.id === inviteId);
+            if (!invite) return;
+            invite.completed = true;
+            invite.completedAt = now();
+            const user = userById(invite.userId);
+            if (user) {
+              user.verified = true;
+              user.verifiedAt = now();
+            }
+            queueComms({ recipient: user?.email || "User", channel: "Email", subject: "Account verified", body: "Your portal profile is now active." });
+            persist();
+            renderApp();
+          };
+        });
       }
     }
 
-    render();
+    renderLogin();
   </script>
 </body>
 </html>
