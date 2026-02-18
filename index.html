@@ -1,12 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abongile</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busamed CareFlow - Secure Remote Hospital Demo</title>
+  <style>
+    :root {
+      --bg: #f3f7fd;
+      --card: #ffffff;
+      --line: #d8e4f6;
+      --primary: #1258c3;
+      --primary-2: #0c469f;
+      --text: #1f2937;
+      --muted: #667085;
+      --ok: #05603a;
+      --ok-bg: #ecfdf3;
+      --warn: #92400e;
+      --warn-bg: #fff7e8;
+      --danger: #991b1b;
+      --danger-bg: #fee2e2;
+      --critical: #b91c1c;
+      --high: #ea580c;
+      --medium: #ca8a04;
+      --low: #15803d;
+    }
+
+    * { box-sizing: border-box; font-family: Inter, Segoe UI, Arial, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+
+    header {
+      background: linear-gradient(120deg, #0f3d84, #1258c3);
+      color: #fff;
+      padding: 1rem 1.2rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    h1 { margin: 0; font-size: 1.3rem; }
+    header p { margin: .35rem 0 0; opacity: .92; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1rem;
+      align-items: start;
+      padding: 1rem;
+    }
+
+    .panel, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .95rem;
+      box-shadow: 0 4px 14px rgba(15,23,42,.06);
+    }
+
+    .panel h2, .card h2, .card h3 { margin: 0 0 .7rem; }
+    .stack { display: grid; gap: .8rem; }
+
+    label { display: block; margin: .55rem 0 .24rem; font-size: .87rem; font-weight: 600; }
+    input, select, textarea, button {
+      width: 100%; border-radius: 9px; border: 1px solid var(--line);
+      padding: .56rem; font-size: .92rem;
+    }
+    textarea { min-height: 82px; resize: vertical; }
+
+    button {
+      background: var(--primary); color: #fff; border: none; cursor: pointer; font-weight: 700;
+    }
+    button:hover { background: var(--primary-2); }
+
+    .btn-secondary {
+      background: #eef4ff; color: #1f4ea2; border: 1px solid #c6d7f8;
+    }
+
+    .tabs { display: grid; gap: .45rem; }
+    .tabs button.active { background: var(--primary-2); }
+
+    .muted { color: var(--muted); font-size: .86rem; }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: .6rem;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: .62rem;
+    }
+    .kpi small { display: block; color: var(--muted); }
+    .kpi strong { color: #124fb3; font-size: 1.2rem; }
+
+    .grid2 {
+      display: grid;
+      gap: .9rem;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: .4rem; }
+    th, td { text-align: left; border-bottom: 1px solid var(--line); padding: .44rem; vertical-align: top; }
+
+    .msg { display: none; border-radius: 8px; margin-top: .6rem; padding: .52rem; font-size: .9rem; }
+    .ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #bde8cb; }
+    .warn { background: var(--warn-bg); color: var(--warn); border: 1px solid #f1d5aa; }
+    .danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #f5bcbc; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: .18rem .55rem;
+      font-size: .76rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .critical { background: var(--critical); }
+    .high { background: var(--high); }
+    .medium { background: var(--medium); }
+    .low { background: var(--low); }
+
+    .toprow {
+      display: flex; justify-content: space-between; align-items: center; gap: .6rem;
+      flex-wrap: wrap;
+    }
+
+    .session {
+      border: 1px dashed #c6d7f8;
+      border-radius: 9px;
+      padding: .55rem;
+      background: #f8fbff;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-    Jiust vsomething
+  <header>
+    <div class="toprow">
+      <div>
+        <h1>Busamed CareFlow | Secure Paperless Demo</h1>
+        <p>Role-based access for administrators, doctors, and nurses with remote-friendly workflows.</p>
+      </div>
+      <div class="muted" id="nowTime"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel stack">
+      <section>
+        <h2>Secure Demo Login</h2>
+        <p class="muted">Use one of these dummy users for your demo:</p>
+        <div class="session">
+          <div><strong>Administrator:</strong> <code>admin@busamed.demo</code> / <code>Admin@123</code></div>
+          <div><strong>Doctor:</strong> <code>doctor@busamed.demo</code> / <code>Doctor@123</code></div>
+          <div><strong>Nurse:</strong> <code>nurse@busamed.demo</code> / <code>Nurse@123</code></div>
+          <div><strong>OTP:</strong> <code>123456</code> (demo only)</div>
+        </div>
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="user@busamed.demo" />
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Password" />
+        <label>One-time code</label>
+        <input id="loginOtp" placeholder="6-digit OTP" />
+        <button id="loginBtn" style="margin-top:.6rem;">Sign in securely</button>
+        <button id="logoutBtn" class="btn-secondary" style="margin-top:.45rem;">Sign out</button>
+        <div id="loginMsg" class="msg"></div>
+      </section>
+
+      <section>
+        <h2>Role Navigation</h2>
+        <div id="tabs" class="tabs"></div>
+      </section>
+
+      <section class="session">
+        <div><strong>Session:</strong> <span id="sessionText">Not signed in</span></div>
+        <div class="muted">Data is saved locally for demo continuity and accessible from any browser location.</div>
+      </section>
+    </aside>
+
+    <section id="content" class="stack"></section>
+  </main>
+
+  <script>
+    const STORE_KEY = 'busamed-careflow-v4';
+    const users = {
+      'admin@busamed.demo': { password: 'Admin@123', role: 'administrator', name: 'Ms. N. Admin' },
+      'doctor@busamed.demo': { password: 'Doctor@123', role: 'doctor', name: 'Dr. L. Mokoena' },
+      'nurse@busamed.demo': { password: 'Nurse@123', role: 'nurse', name: 'Nurse P. Dube' }
+    };
+
+    const tabsByRole = {
+      administrator: [
+        { id: 'adminOverview', label: 'Admin Control Center' },
+        { id: 'admit', label: 'Admit Patient' },
+        { id: 'discharge', label: 'Discharge + Feedback' },
+        { id: 'outbox', label: 'Communication Outbox' }
+      ],
+      doctor: [
+        { id: 'doctorOverview', label: 'Doctor Dashboard' },
+        { id: 'files', label: 'Patient Files + Uploads' },
+        { id: 'rx', label: 'Prescriptions' },
+        { id: 'outbox', label: 'Communication Outbox' }
+      ],
+      nurse: [
+        { id: 'nurseOverview', label: 'Nurse Station' },
+        { id: 'vitals', label: 'Vitals + BP Monitoring' },
+        { id: 'meds', label: 'Medication Administration' },
+        { id: 'outbox', label: 'Communication Outbox' }
+      ]
+    };
+
+    const seed = {
+      auth: { email: '', role: '', name: '', loggedIn: false, lastLogin: '' },
+      doctors: [
+        { id: 'd1', name: 'Dr. L. Mokoena', ward: 'Surgical' },
+        { id: 'd2', name: 'Dr. K. Naidoo', ward: 'ICU' }
+      ],
+      patients: [
+        {
+          id: 'p1', fullName: 'Thabo Molefe', email: 'thabo@example.com', phone: '0820001111', idNumber: '8501015009088',
+          ward: 'Surgical', doctorId: 'd1', admittedAt: '2026-02-17 08:30', status: 'admitted',
+          emergencyContact: 'Lerato Molefe - 0829990000', allergies: 'None', diagnosis: 'Post-op recovery',
+          criticality: 'high', consentSigned: true, welcomeSent: true,
+          docs: [],
+          prescriptions: [
+            { id: 'rx1', medication: 'Amlodipine 5mg', instruction: '1 tablet after breakfast', schedule: '08:00', createdAt: '2026-02-17 09:00' }
+          ],
+          vitals: [
+            { time: '2026-02-17T10:00', bloodPressure: '150/96', result: 'High blood pressure, monitor in 4 hours' }
+          ],
+          medLogs: [],
+          dischargeFeedback: null
+        }
+      ],
+      emails: [
+        { id: 'e1', to: 'thabo@example.com', type: 'Welcome', subject: 'Welcome to Busamed CareFlow', sentAt: '2026-02-17 08:35' }
+      ]
+    };
+
+    let state = load();
+    let activeTab = state.auth.loggedIn && state.auth.role ? tabsByRole[state.auth.role][0].id : '';
+
+    const contentEl = document.getElementById('content');
+    const tabsEl = document.getElementById('tabs');
+    const loginMsg = document.getElementById('loginMsg');
+    const sessionText = document.getElementById('sessionText');
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        return raw ? JSON.parse(raw) : structuredClone(seed);
+      } catch {
+        return structuredClone(seed);
+      }
+    }
+
+    function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    function nowHuman() { return new Date().toLocaleString(); }
+
+    function doctorName(id) {
+      return state.doctors.find(d => d.id === id)?.name || 'Unassigned';
+    }
+
+    function criticalityBadge(level) {
+      const cls = level || 'low';
+      return `<span class="badge ${cls}">${cls.toUpperCase()}</span>`;
+    }
+
+    function queueEmail(to, type, subject) {
+      state.emails.unshift({ id: 'e' + Date.now(), to, type, subject, sentAt: nowHuman() });
+    }
+
+    function setMessage(el, kind, text) {
+      el.className = 'msg ' + kind;
+      el.style.display = 'block';
+      el.textContent = text;
+    }
+
+    function signIn() {
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      const otp = document.getElementById('loginOtp').value.trim();
+      const user = users[email];
+
+      if (!user || user.password !== password || otp !== '123456') {
+        setMessage(loginMsg, 'danger', 'Login failed. Check demo credentials and OTP 123456.');
+        return;
+      }
+
+      state.auth = {
+        email,
+        role: user.role,
+        name: user.name,
+        loggedIn: true,
+        lastLogin: nowHuman()
+      };
+      activeTab = tabsByRole[user.role][0].id;
+      save();
+      setMessage(loginMsg, 'ok', `Welcome ${user.name}. Secure session started.`);
+      render();
+    }
+
+    function signOut() {
+      state.auth = { email: '', role: '', name: '', loggedIn: false, lastLogin: '' };
+      activeTab = '';
+      save();
+      setMessage(loginMsg, 'warn', 'Signed out successfully.');
+      render();
+    }
+
+    function patientOptions(filter = null) {
+      const list = filter ? state.patients.filter(filter) : state.patients;
+      return list.map(p => `<option value="${p.id}">${p.fullName} - ${p.ward} - ${p.criticality.toUpperCase()}</option>`).join('');
+    }
+
+    function renderTabs() {
+      tabsEl.innerHTML = '';
+      if (!state.auth.loggedIn) return;
+      tabsByRole[state.auth.role].forEach(tab => {
+        const btn = document.createElement('button');
+        btn.textContent = tab.label;
+        btn.className = activeTab === tab.id ? 'active' : 'btn-secondary';
+        btn.onclick = () => { activeTab = tab.id; renderContent(); renderTabs(); };
+        tabsEl.appendChild(btn);
+      });
+    }
+
+    function renderAdminOverview() {
+      const admitted = state.patients.filter(p => p.status === 'admitted').length;
+      const discharged = state.patients.filter(p => p.status === 'discharged').length;
+      return `
+      <article class="card">
+        <h2>Administrator Control Center</h2>
+        <div class="kpis">
+          <div class="kpi"><small>Total Patients</small><strong>${state.patients.length}</strong></div>
+          <div class="kpi"><small>Admitted</small><strong>${admitted}</strong></div>
+          <div class="kpi"><small>Discharged</small><strong>${discharged}</strong></div>
+          <div class="kpi"><small>Emails Sent</small><strong>${state.emails.length}</strong></div>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Live Patient Board</h3>
+        <table>
+          <thead><tr><th>Patient</th><th>Criticality</th><th>Status</th><th>Ward</th><th>Doctor</th><th>Admitted</th></tr></thead>
+          <tbody>
+            ${state.patients.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.status}</td><td>${p.ward}</td><td>${doctorName(p.doctorId)}</td><td>${p.admittedAt}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </article>`;
+    }
+
+    function renderAdmit() {
+      return `
+      <article class="card">
+        <h2>Admit New Patient</h2>
+        <form id="admitForm">
+          <div class="grid2">
+            <div>
+              <label>Full Name</label><input required name="fullName" />
+              <label>ID / Passport</label><input required name="idNumber" />
+              <label>Email</label><input required type="email" name="email" />
+              <label>Phone</label><input required name="phone" />
+              <label>Emergency Contact</label><input required name="emergencyContact" />
+            </div>
+            <div>
+              <label>Ward</label><select required name="ward"><option>Surgical</option><option>ICU</option><option>Maternity</option><option>Emergency</option></select>
+              <label>Assign Doctor</label><select required name="doctorId">${state.doctors.map(d => `<option value="${d.id}">${d.name} (${d.ward})</option>`).join('')}</select>
+              <label>Allergies</label><input name="allergies" placeholder="e.g. Penicillin" />
+              <label>Diagnosis / Admission Reason</label><textarea required name="diagnosis"></textarea>
+              <label>Criticality</label><select required name="criticality"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+              <label>Digital Signature Consent</label><input required name="signature" placeholder="Patient full name" />
+            </div>
+          </div>
+          <button type="submit">Admit + Send Welcome Message</button>
+          <div id="admitMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderDischarge() {
+      const admitted = state.patients.filter(p => p.status === 'admitted');
+      return `
+      <article class="card">
+        <h2>Discharge and Capture Patient Feedback</h2>
+        <form id="dischargeForm">
+          <label>Patient</label>
+          <select required name="patientId">${admitted.length ? patientOptions(p => p.status === 'admitted') : '<option value="">No admitted patients</option>'}</select>
+          <label>Discharge Summary</label><textarea required name="summary"></textarea>
+          <label>Patient Rating</label><select required name="rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+          <label>Patient Feedback</label><textarea required name="feedback" placeholder="Share patient experience"></textarea>
+          <button type="submit">Discharge Patient</button>
+          <div id="dischargeMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderDoctorOverview() {
+      const active = state.patients.filter(p => p.status === 'admitted');
+      return `
+      <article class="card">
+        <h2>Doctor Dashboard</h2>
+        <p class="muted">Remote-capable workflow: review files, prescribe medication, and coordinate with nursing teams from anywhere.</p>
+        <table>
+          <thead><tr><th>Patient</th><th>Criticality</th><th>Diagnosis</th><th>Documents</th><th>Prescriptions</th></tr></thead>
+          <tbody>${active.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.diagnosis}</td><td>${p.docs.length}/10</td><td>${p.prescriptions.length}</td></tr>`).join('')}</tbody>
+        </table>
+      </article>`;
+    }
+
+    function renderFiles() {
+      return `
+      <article class="card">
+        <h2>Patient Files + Additional Documents</h2>
+        <form id="fileForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <label>Document Title</label><input required name="title" />
+          <label>Upload PDF (max 10 per patient)</label><input required name="file" type="file" accept="application/pdf,.pdf" />
+          <button type="submit">Upload Document</button>
+          <div id="fileMsg" class="msg"></div>
+        </form>
+      </article>
+      <article class="card">
+        <h3>Patient Document Counters</h3>
+        <table><thead><tr><th>Patient</th><th>Docs</th><th>Last Upload</th></tr></thead>
+        <tbody>${state.patients.filter(p => p.status === 'admitted').map(p => `<tr><td>${p.fullName}</td><td>${p.docs.length}/10</td><td>${p.docs[0]?.uploadedAt || '-'}</td></tr>`).join('')}</tbody></table>
+      </article>`;
+    }
+
+    function renderRx() {
+      return `
+      <article class="card">
+        <h2>Create Prescription</h2>
+        <form id="rxForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <label>Medication</label><input required name="medication" placeholder="e.g. Lisinopril 10mg" />
+          <label>Instructions</label><textarea required name="instruction" placeholder="How patient should take medication"></textarea>
+          <label>Scheduled Time</label><input required type="time" name="schedule" />
+          <label>Nurse Email</label><input required type="email" name="nurseEmail" placeholder="nurse@busamed.demo" />
+          <button type="submit">Save Prescription + Notify Nurse</button>
+          <div id="rxMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderNurseOverview() {
+      const active = state.patients.filter(p => p.status === 'admitted');
+      return `
+      <article class="card">
+        <h2>Nurse Station Overview</h2>
+        <table>
+          <thead><tr><th>Patient</th><th>Criticality</th><th>Latest BP</th><th>Medication Logs</th></tr></thead>
+          <tbody>${active.map(p => `<tr><td>${p.fullName}</td><td>${criticalityBadge(p.criticality)}</td><td>${p.vitals[0]?.bloodPressure || '-'}</td><td>${p.medLogs.length}</td></tr>`).join('')}</tbody>
+        </table>
+      </article>`;
+    }
+
+    function renderVitals() {
+      return `
+      <article class="card">
+        <h2>Vitals and Blood Pressure Monitoring</h2>
+        <form id="vitalsForm">
+          <label>Patient</label><select required name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <label>Observation Date and Time</label><input required type="datetime-local" name="time" />
+          <label>Blood Pressure</label><input required name="bp" placeholder="e.g. 165/105" />
+          <label>Result / Notes</label><textarea required name="result" placeholder="Include alerts and escalation actions"></textarea>
+          <button type="submit">Save Vitals Log</button>
+          <div id="vitalsMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderMeds() {
+      return `
+      <article class="card">
+        <h2>Medication Administration Checklist</h2>
+        <form id="medForm">
+          <label>Patient</label>
+          <select required id="medPatient" name="patientId">${patientOptions(p => p.status === 'admitted')}</select>
+          <div id="medRows" class="stack" style="margin-top:.5rem;"></div>
+          <button type="submit">Save Medication Logs</button>
+          <div id="medMsg" class="msg ok"></div>
+        </form>
+      </article>`;
+    }
+
+    function renderOutbox() {
+      return `
+      <article class="card">
+        <h2>Communication Outbox</h2>
+        <table>
+          <thead><tr><th>Sent At</th><th>To</th><th>Type</th><th>Subject</th></tr></thead>
+          <tbody>${state.emails.length ? state.emails.map(e => `<tr><td>${e.sentAt}</td><td>${e.to}</td><td>${e.type}</td><td>${e.subject}</td></tr>`).join('') : '<tr><td colspan="4">No messages sent.</td></tr>'}</tbody>
+        </table>
+      </article>`;
+    }
+
+    function bindAdmin() {
+      const admitForm = document.getElementById('admitForm');
+      if (admitForm) {
+        admitForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(admitForm);
+          const p = {
+            id: 'p' + Date.now(),
+            fullName: d.get('fullName'), idNumber: d.get('idNumber'), email: d.get('email'), phone: d.get('phone'),
+            emergencyContact: d.get('emergencyContact'), ward: d.get('ward'), doctorId: d.get('doctorId'), allergies: d.get('allergies') || '-',
+            diagnosis: d.get('diagnosis'), criticality: d.get('criticality'), consentSigned: true, status: 'admitted',
+            admittedAt: nowHuman(), welcomeSent: true, docs: [], prescriptions: [], vitals: [], medLogs: [], dischargeFeedback: null
+          };
+          state.patients.push(p);
+          queueEmail(p.email, 'Welcome', 'Welcome to Busamed CareFlow');
+          save();
+          setMessage(document.getElementById('admitMsg'), 'ok', `${p.fullName} admitted successfully. Welcome message sent.`);
+          admitForm.reset();
+          renderContent();
+        };
+      }
+
+      const dischargeForm = document.getElementById('dischargeForm');
+      if (dischargeForm) {
+        dischargeForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(dischargeForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          if (!p) return;
+          p.status = 'discharged';
+          p.dischargedAt = nowHuman();
+          p.dischargeSummary = d.get('summary');
+          p.dischargeFeedback = { rating: Number(d.get('rating')), feedback: d.get('feedback'), capturedAt: nowHuman() };
+          queueEmail(p.email, 'Discharge', 'Discharge summary and thank you for feedback');
+          save();
+          setMessage(document.getElementById('dischargeMsg'), 'ok', `${p.fullName} discharged. Feedback ${p.dischargeFeedback.rating}/5 captured.`);
+          renderContent();
+        };
+      }
+    }
+
+    function bindDoctor() {
+      const fileForm = document.getElementById('fileForm');
+      if (fileForm) {
+        fileForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(fileForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          const f = d.get('file');
+          const msg = document.getElementById('fileMsg');
+          if (!p) return;
+
+          if (p.docs.length >= 10) {
+            setMessage(msg, 'warn', `Upload blocked: ${p.fullName} already has 10 documents.`);
+            return;
+          }
+
+          if (!f || !f.name || !f.name.toLowerCase().endsWith('.pdf')) {
+            setMessage(msg, 'warn', 'Only PDF files are allowed.');
+            return;
+          }
+
+          p.docs.unshift({ title: d.get('title'), fileName: f.name, uploadedAt: nowHuman(), uploadedBy: state.auth.name });
+          save();
+          setMessage(msg, 'ok', `Document uploaded for ${p.fullName}. ${p.docs.length}/10 used.`);
+          fileForm.reset();
+          renderContent();
+        };
+      }
+
+      const rxForm = document.getElementById('rxForm');
+      if (rxForm) {
+        rxForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(rxForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          if (!p) return;
+          p.prescriptions.unshift({
+            id: 'rx' + Date.now(),
+            medication: d.get('medication'),
+            instruction: d.get('instruction'),
+            schedule: d.get('schedule'),
+            createdAt: nowHuman(),
+            createdBy: state.auth.name
+          });
+          queueEmail(d.get('nurseEmail'), 'Prescription', `New prescription for ${p.fullName}`);
+          save();
+          setMessage(document.getElementById('rxMsg'), 'ok', `Prescription created for ${p.fullName} and nurse notified.`);
+          rxForm.reset();
+          renderContent();
+        };
+      }
+    }
+
+    function paintMedicationRows(patientId) {
+      const holder = document.getElementById('medRows');
+      const p = state.patients.find(x => x.id === patientId);
+      if (!holder || !p) return;
+      if (!p.prescriptions.length) {
+        holder.innerHTML = '<p class="muted">No doctor prescriptions available for this patient.</p>';
+        return;
+      }
+      holder.innerHTML = p.prescriptions.map((rx, i) => `
+        <div class="panel">
+          <div><strong>${rx.medication}</strong> ${criticalityBadge(p.criticality)}</div>
+          <div class="muted">Schedule: ${rx.schedule} | Instruction: ${rx.instruction}</div>
+          <label>Medication given?</label>
+          <select name="given_${i}"><option value="yes">Yes</option><option value="no">No</option></select>
+          <label>Given at (date/time)</label>
+          <input type="datetime-local" name="time_${i}" />
+          <input type="hidden" name="med_${i}" value="${rx.medication}" />
+          <input type="hidden" name="ins_${i}" value="${rx.instruction}" />
+          <input type="hidden" name="sch_${i}" value="${rx.schedule}" />
+        </div>
+      `).join('');
+    }
+
+    function bindNurse() {
+      const vitalsForm = document.getElementById('vitalsForm');
+      if (vitalsForm) {
+        vitalsForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(vitalsForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          if (!p) return;
+          p.vitals.unshift({ time: d.get('time'), bloodPressure: d.get('bp'), result: d.get('result'), loggedBy: state.auth.name });
+          save();
+          setMessage(document.getElementById('vitalsMsg'), 'ok', `Vitals logged for ${p.fullName} at ${d.get('time')}.`);
+          vitalsForm.reset();
+          renderContent();
+        };
+      }
+
+      const medPatient = document.getElementById('medPatient');
+      if (medPatient) {
+        paintMedicationRows(medPatient.value);
+        medPatient.onchange = () => paintMedicationRows(medPatient.value);
+      }
+
+      const medForm = document.getElementById('medForm');
+      if (medForm) {
+        medForm.onsubmit = (e) => {
+          e.preventDefault();
+          const d = new FormData(medForm);
+          const p = state.patients.find(x => x.id === d.get('patientId'));
+          if (!p) return;
+          let count = 0;
+          p.prescriptions.forEach((_, i) => {
+            if (d.get(`given_${i}`) === 'yes') {
+              p.medLogs.unshift({
+                medication: d.get(`med_${i}`),
+                instruction: d.get(`ins_${i}`),
+                scheduled: d.get(`sch_${i}`),
+                givenAt: d.get(`time_${i}`) || new Date().toISOString(),
+                nurse: state.auth.name
+              });
+              count++;
+            }
+          });
+          save();
+          setMessage(document.getElementById('medMsg'), 'ok', `${count} medication administration entries saved for ${p.fullName}.`);
+          renderContent();
+        };
+      }
+    }
+
+    function renderAuthLocked() {
+      return `
+      <article class="card">
+        <h2>Sign in required</h2>
+        <p class="muted">Please sign in with dummy credentials to access role dashboards.</p>
+      </article>`;
+    }
+
+    function renderContent() {
+      if (!state.auth.loggedIn) {
+        contentEl.innerHTML = renderAuthLocked();
+        return;
+      }
+
+      if (state.auth.role === 'administrator') {
+        if (activeTab === 'adminOverview') contentEl.innerHTML = renderAdminOverview();
+        if (activeTab === 'admit') contentEl.innerHTML = renderAdmit();
+        if (activeTab === 'discharge') contentEl.innerHTML = renderDischarge();
+        if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
+        bindAdmin();
+      }
+
+      if (state.auth.role === 'doctor') {
+        if (activeTab === 'doctorOverview') contentEl.innerHTML = renderDoctorOverview();
+        if (activeTab === 'files') contentEl.innerHTML = renderFiles();
+        if (activeTab === 'rx') contentEl.innerHTML = renderRx();
+        if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
+        bindDoctor();
+      }
+
+      if (state.auth.role === 'nurse') {
+        if (activeTab === 'nurseOverview') contentEl.innerHTML = renderNurseOverview();
+        if (activeTab === 'vitals') contentEl.innerHTML = renderVitals();
+        if (activeTab === 'meds') contentEl.innerHTML = renderMeds();
+        if (activeTab === 'outbox') contentEl.innerHTML = renderOutbox();
+        bindNurse();
+      }
+    }
+
+    function renderSession() {
+      if (!state.auth.loggedIn) {
+        sessionText.textContent = 'Not signed in';
+        return;
+      }
+      sessionText.textContent = `${state.auth.name} (${state.auth.role}) | Last login: ${state.auth.lastLogin}`;
+    }
+
+    function render() {
+      renderTabs();
+      renderSession();
+      renderContent();
+    }
+
+    document.getElementById('loginBtn').onclick = signIn;
+    document.getElementById('logoutBtn').onclick = signOut;
+
+    function tickClock() { document.getElementById('nowTime').textContent = `System time: ${new Date().toLocaleString()}`; }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    render();
+  </script>
 </body>
 </html>
