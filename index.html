@@ -550,17 +550,40 @@
         </article>
 
         <article class="card">
-          <h2>Mapped Documents (View / Download / Edit)</h2>
+          <h2>Mapped Documents (View / Download / Edit / Delete)</h2>
           <table class="table">
             <thead><tr><th>Case #</th><th>Client</th><th>Type</th><th>Document</th><th>Date on Doc</th><th>Uploaded</th><th>Actions</th></tr></thead>
             <tbody>
               ${state.documents.slice(0, 12).map((d) => `<tr><td>${d.caseNumber}</td><td>${d.clientName}</td><td>${d.caseType}</td><td>${d.docType} (${d.fileName})</td><td>${d.dateOnDocument}</td><td>${fmt(d.uploadedAt)}</td><td>
-                ${d.dataUrl ? `<a href="${d.dataUrl}" target="_blank">View</a> | <a href="${d.dataUrl}" download="${d.fileName}">Download</a>` : `<span class="muted">No preview</span>`}
+                <button data-doc-id="${d.id}" class="viewDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem;">View</button>
+                ${d.dataUrl ? ` | <a href="${d.dataUrl}" download="${d.fileName}">Download</a>` : ` | <span class="muted">Download unavailable</span>`}
                  | <button data-doc-id="${d.id}" class="editDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem;">Edit</button>
+                 | <button data-doc-id="${d.id}" class="deleteDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem; background:#b42318;">Delete</button>
               </td></tr>`).join("")}
             </tbody>
           </table>
-          <p class="muted">Tip: For very large files, preview may be unavailable but metadata remains searchable.</p>
+          <p class="muted">Tip: Click View to load full uploaded document fields and preview in the portal.</p>
+        </article>
+
+        <article class="card">
+          <h2>Selected Document Details (Portal View)</h2>
+          ${selectedDoc ? `
+            <div class="grid-3">
+              <div><strong>Case Number:</strong><br>${selectedDoc.caseNumber}</div>
+              <div><strong>Client Name:</strong><br>${selectedDoc.clientName}</div>
+              <div><strong>Case Type:</strong><br>${selectedDoc.caseType}</div>
+              <div><strong>Document Type:</strong><br>${selectedDoc.docType}</div>
+              <div><strong>Date on Document:</strong><br>${selectedDoc.dateOnDocument}</div>
+              <div><strong>File Name:</strong><br>${selectedDoc.fileName}</div>
+              <div><strong>File Size:</strong><br>${selectedDoc.fileSize || "Unknown"}</div>
+              <div><strong>Uploaded At:</strong><br>${fmt(selectedDoc.uploadedAt)}</div>
+              <div><strong>Mapped At:</strong><br>${fmt(selectedDoc.mappedAt)}</div>
+            </div>
+            <label style="margin-top:0.8rem;">OCR / Mapped Text</label>
+            <div style="border:1px solid var(--border); border-radius:8px; padding:0.6rem; background:#faf8f4;">${selectedDoc.ocrSummary || "-"}</div>
+            <label style="margin-top:0.8rem;">File Preview</label>
+            ${selectedDoc.dataUrl ? `<iframe src="${selectedDoc.dataUrl}" style="width:100%; min-height:420px; border:1px solid var(--border); border-radius:8px; background:#fff;"></iframe>` : `<div class="muted">Preview not available for this record. You can still edit fields above and re-upload a new file if needed.</div>`}
+          ` : `<p class="muted">No document selected.</p>`}
         </article>
 
         <article class="card">
@@ -836,6 +859,28 @@
         document.querySelectorAll(".editDocBtn").forEach((btn) => {
           btn.onclick = () => {
             selectedDocumentId = btn.getAttribute("data-doc-id");
+            renderApp();
+          };
+        });
+
+        document.querySelectorAll(".viewDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            selectedDocumentId = btn.getAttribute("data-doc-id");
+            renderApp();
+          };
+        });
+
+        document.querySelectorAll(".deleteDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            const docId = btn.getAttribute("data-doc-id");
+            const index = state.documents.findIndex((item) => item.id === docId);
+            if (index < 0) return;
+            const [removed] = state.documents.splice(index, 1);
+            if (selectedDocumentId === docId) {
+              selectedDocumentId = state.documents[0]?.id || null;
+            }
+            queueComms({ recipient: "Internal Team", channel: "Audit", subject: `Document deleted (${removed.caseNumber})`, body: `${removed.fileName} removed by ${currentUser.name}.` });
+            persist();
             renderApp();
           };
         });
