@@ -280,6 +280,7 @@
     let state = loadState();
     let currentUser = null;
     let activeView = "dashboard";
+    let selectedDocumentId = null;
 
     const loginScreen = document.getElementById("loginScreen");
     const appScreen = document.getElementById("appScreen");
@@ -301,6 +302,19 @@
     function fmt(iso) {
       if (!iso) return "-";
       return new Date(iso).toLocaleString();
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve) => {
+        if (!file) {
+          resolve("");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(file);
+      });
     }
 
     function clientById(id) { return state.clients.find((c) => c.id === id); }
@@ -508,6 +522,7 @@
     }
 
     function migrationView() {
+      const selectedDoc = state.documents.find((doc) => doc.id === selectedDocumentId) || state.documents[0];
       return `
         <article class="card">
           <h2>File Migration + Field Mapping</h2>
@@ -535,13 +550,37 @@
         </article>
 
         <article class="card">
-          <h2>Latest Mapped Documents</h2>
+          <h2>Mapped Documents (View / Download / Edit)</h2>
           <table class="table">
-            <thead><tr><th>Case #</th><th>Client</th><th>Type</th><th>Document</th><th>Date on Doc</th><th>Uploaded</th></tr></thead>
+            <thead><tr><th>Case #</th><th>Client</th><th>Type</th><th>Document</th><th>Date on Doc</th><th>Uploaded</th><th>Actions</th></tr></thead>
             <tbody>
-              ${state.documents.slice(0, 8).map((d) => `<tr><td>${d.caseNumber}</td><td>${d.clientName}</td><td>${d.caseType}</td><td>${d.docType} (${d.fileName})</td><td>${d.dateOnDocument}</td><td>${fmt(d.uploadedAt)}</td></tr>`).join("")}
+              ${state.documents.slice(0, 12).map((d) => `<tr><td>${d.caseNumber}</td><td>${d.clientName}</td><td>${d.caseType}</td><td>${d.docType} (${d.fileName})</td><td>${d.dateOnDocument}</td><td>${fmt(d.uploadedAt)}</td><td>
+                ${d.dataUrl ? `<a href="${d.dataUrl}" target="_blank">View</a> | <a href="${d.dataUrl}" download="${d.fileName}">Download</a>` : `<span class="muted">No preview</span>`}
+                 | <button data-doc-id="${d.id}" class="editDocBtn" type="button" style="margin:0; width:auto; padding:0.25rem 0.4rem;">Edit</button>
+              </td></tr>`).join("")}
             </tbody>
           </table>
+          <p class="muted">Tip: For very large files, preview may be unavailable but metadata remains searchable.</p>
+        </article>
+
+        <article class="card">
+          <h2>Edit Mapped Document Details</h2>
+          ${selectedDoc ? `
+          <form id="editDocForm">
+            <input type="hidden" name="docId" value="${selectedDoc.id}" />
+            <div class="grid-3">
+              <div><label>Case Number</label><input required name="caseNumber" value="${selectedDoc.caseNumber}" /></div>
+              <div><label>Client Name</label><input required name="clientName" value="${selectedDoc.clientName}" /></div>
+              <div><label>Case Type</label><select name="caseType"><option ${selectedDoc.caseType === "RAF" ? "selected" : ""}>RAF</option><option ${selectedDoc.caseType === "Civil" ? "selected" : ""}>Civil</option><option ${selectedDoc.caseType === "Criminal" ? "selected" : ""}>Criminal</option><option ${selectedDoc.caseType === "Family" ? "selected" : ""}>Family</option><option ${selectedDoc.caseType === "Labour" ? "selected" : ""}>Labour</option><option ${selectedDoc.caseType === "Conveyancing" ? "selected" : ""}>Conveyancing</option></select></div>
+              <div><label>Document Type</label><input required name="docType" value="${selectedDoc.docType}" /></div>
+              <div><label>Date on Document</label><input required type="date" name="dateOnDocument" value="${selectedDoc.dateOnDocument}" /></div>
+              <div><label>File Name</label><input required name="fileName" value="${selectedDoc.fileName}" /></div>
+            </div>
+            <label>OCR Summary / Notes</label>
+            <textarea required name="ocrSummary">${selectedDoc.ocrSummary || ""}</textarea>
+            <button type="submit">Save Corrections</button>
+            <div id="editDocResult" class="result ok"></div>
+          </form>` : `<p class="muted">No document selected.</p>`}
         </article>
       `;
     }
@@ -752,15 +791,16 @@
 
       const migrationForm = document.getElementById("migrationForm");
       if (migrationForm) {
-        migrationForm.onsubmit = (event) => {
+        migrationForm.onsubmit = async (event) => {
           event.preventDefault();
           const data = new FormData(migrationForm);
           const caseNumber = String(data.get("caseNumber"));
           const matter = state.matters.find((m) => m.caseNumber === caseNumber);
           const client = clientById(matter?.clientId);
           const file = data.get("file");
+          const dataUrl = await fileToDataUrl(file);
 
-          state.documents.unshift({
+          const newDocument = {
             id: `d-${Date.now()}`,
             matterId: matter?.id,
             caseNumber,
@@ -773,8 +813,11 @@
             uploadedBy: currentUser.id,
             uploadedAt: now(),
             mappedAt: now(),
-            ocrSummary: data.get("ocrSummary")
-          });
+            ocrSummary: data.get("ocrSummary"),
+            dataUrl
+          };
+          state.documents.unshift(newDocument);
+          selectedDocumentId = newDocument.id;
 
           if (matter) {
             matter.docsCount += 1;
@@ -789,6 +832,46 @@
           result.textContent = `File mapped to case ${caseNumber}. Search index updated.`;
           renderApp();
         };
+
+        document.querySelectorAll(".editDocBtn").forEach((btn) => {
+          btn.onclick = () => {
+            selectedDocumentId = btn.getAttribute("data-doc-id");
+            renderApp();
+          };
+        });
+
+        const editDocForm = document.getElementById("editDocForm");
+        if (editDocForm) {
+          editDocForm.onsubmit = (event) => {
+            event.preventDefault();
+            const data = new FormData(editDocForm);
+            const doc = state.documents.find((item) => item.id === data.get("docId"));
+            if (!doc) return;
+
+            doc.caseNumber = String(data.get("caseNumber"));
+            doc.clientName = String(data.get("clientName"));
+            doc.caseType = String(data.get("caseType"));
+            doc.docType = String(data.get("docType"));
+            doc.dateOnDocument = String(data.get("dateOnDocument"));
+            doc.fileName = String(data.get("fileName"));
+            doc.ocrSummary = String(data.get("ocrSummary"));
+            doc.mappedAt = now();
+
+            const linkedMatter = state.matters.find((m) => m.caseNumber === doc.caseNumber);
+            if (linkedMatter) {
+              linkedMatter.caseType = doc.caseType;
+              linkedMatter.updatedAt = now();
+              linkedMatter.lastActivityAt = now();
+            }
+
+            queueComms({ recipient: "Internal Team", channel: "Audit", subject: `Document corrected (${doc.caseNumber})`, body: `${doc.fileName} metadata updated by ${currentUser.name}.` });
+            persist();
+            const result = document.getElementById("editDocResult");
+            result.style.display = "block";
+            result.textContent = "Document details corrected and saved.";
+            renderApp();
+          };
+        }
       }
 
       const runSearch = document.getElementById("runSearch");
