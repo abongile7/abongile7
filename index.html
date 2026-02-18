@@ -269,6 +269,10 @@
     const xhosaDictionary = {
       "abongile": "Abongile",
       "abongiwe": "Abongile",
+      "abom": "Abongile",
+      "abund": "Abongile",
+      "abundi": "Abongile",
+      "abongi": "Abongile",
       "mthatha": "Mthatha",
       "umtata": "Mthatha",
       "xhosa": "isiXhosa",
@@ -629,20 +633,60 @@
       `;
     }
 
+    function removeRepeatedPhrases(words) {
+      const cleaned = [];
+      let i = 0;
+      while (i < words.length) {
+        let skipped = false;
+        for (let size = Math.min(6, Math.floor((words.length - i) / 2)); size >= 2; size -= 1) {
+          const first = words.slice(i, i + size).map((w) => w.toLowerCase());
+          const second = words.slice(i + size, i + (size * 2)).map((w) => w.toLowerCase());
+          if (first.join(" ") === second.join(" ")) {
+            cleaned.push(...words.slice(i, i + size));
+            while (i + (size * 2) <= words.length) {
+              const left = words.slice(i, i + size).map((w) => w.toLowerCase()).join(" ");
+              const right = words.slice(i + size, i + (size * 2)).map((w) => w.toLowerCase()).join(" ");
+              if (left !== right) break;
+              i += size;
+            }
+            i += size;
+            skipped = true;
+            break;
+          }
+        }
+        if (!skipped) {
+          cleaned.push(words[i]);
+          i += 1;
+        }
+      }
+      return cleaned;
+    }
+
     function normalizeTranscript(text) {
       if (!text) return "";
-      const words = text.split(/\s+/).filter(Boolean);
-      const deduped = [];
+      const normalized = text
+        .replace(/\s+/g, " ")
+        .replace(/(my\s+name\s+is)(\s+\1)+/gi, "$1")
+        .trim();
+
+      const words = normalized.split(/\s+/).filter(Boolean);
+      const dedupedSingles = [];
       for (const word of words) {
-        const prev = deduped[deduped.length - 1]?.toLowerCase();
+        const prev = dedupedSingles[dedupedSingles.length - 1]?.toLowerCase();
         if (prev === word.toLowerCase()) continue;
-        deduped.push(word);
+        dedupedSingles.push(word);
       }
-      const corrected = deduped.map((word) => {
+
+      const dedupedPhrases = removeRepeatedPhrases(dedupedSingles);
+      const corrected = dedupedPhrases.map((word) => {
         const clean = word.toLowerCase().replace(/[^a-z]/g, "");
-        return xhosaDictionary[clean] || word;
+        if (xhosaDictionary[clean]) return xhosaDictionary[clean];
+        if (clean.startsWith("abo") || clean.startsWith("abun") || clean.startsWith("abom")) return "Abongile";
+        return word;
       });
-      return corrected.join(" ");
+
+      const secondPass = removeRepeatedPhrases(corrected);
+      return secondPass.join(" ");
     }
 
     function voiceView() {
