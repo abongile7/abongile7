@@ -285,6 +285,8 @@
     let currentUser = null;
     let activeView = "dashboard";
     let selectedDocumentId = null;
+    let voiceRecognition = null;
+    let voiceListening = false;
 
     const loginScreen = document.getElementById("loginScreen");
     const appScreen = document.getElementById("appScreen");
@@ -1013,23 +1015,72 @@
             return;
           }
 
+          if (voiceListening && voiceRecognition) {
+            voiceListening = false;
+            startVoice.textContent = "Start Voice Capture";
+            voiceResult.style.display = "block";
+            voiceResult.className = "result ok";
+            voiceResult.textContent = "Voice capture stopped.";
+            voiceRecognition.stop();
+            return;
+          }
+
           const recognition = new SpeechRecognition();
           const formData = new FormData(voiceForm);
           recognition.lang = formData.get("language");
           recognition.interimResults = true;
-          recognition.continuous = false;
-          let full = "";
-          startVoice.textContent = "Listening...";
+          recognition.continuous = true;
+          voiceRecognition = recognition;
+          voiceListening = true;
+          startVoice.textContent = "Stop Voice Capture";
+          voiceResult.style.display = "block";
+          voiceResult.className = "result ok";
+          voiceResult.textContent = "Listening... keep speaking. Click Stop Voice Capture when finished.";
 
           recognition.onresult = (event) => {
-            let partial = "";
+            let finalText = "";
+            let interimText = "";
             for (let i = event.resultIndex; i < event.results.length; i += 1) {
-              partial += event.results[i][0].transcript;
+              const chunk = event.results[i][0].transcript;
+              if (event.results[i].isFinal) {
+                finalText += ` ${chunk}`;
+              } else {
+                interimText += ` ${chunk}`;
+              }
             }
-            full = `${full} ${partial}`.trim();
-            voiceText.value = normalizeTranscript(full);
+
+            if (finalText.trim()) {
+              const combined = `${voiceText.value} ${finalText}`.replace(/\s+/g, " ").trim();
+              voiceText.value = combined;
+            }
+
+            if (interimText.trim()) {
+              voiceResult.style.display = "block";
+              voiceResult.className = "result ok";
+              voiceResult.textContent = `Listening... ${interimText.trim()}`;
+            }
           };
-          recognition.onend = () => { startVoice.textContent = "Start Voice Capture"; };
+
+          recognition.onerror = () => {
+            voiceResult.style.display = "block";
+            voiceResult.className = "result warn";
+            voiceResult.textContent = "Microphone error detected. You can retry or paste text and clean it.";
+          };
+
+          recognition.onend = () => {
+            if (voiceListening) {
+              try {
+                recognition.start();
+                return;
+              } catch {
+                // If immediate restart fails, fall through and reset button.
+              }
+            }
+            startVoice.textContent = "Start Voice Capture";
+            voiceListening = false;
+            voiceRecognition = null;
+          };
+
           recognition.start();
         };
 
@@ -1038,6 +1089,11 @@
           const data = new FormData(voiceForm);
           const clean = normalizeTranscript(String(data.get("transcript")));
           const matter = state.matters.find((m) => m.caseNumber === data.get("caseNumber"));
+
+          if (voiceListening && voiceRecognition) {
+            voiceListening = false;
+            voiceRecognition.stop();
+          }
 
           state.voiceNotes.unshift({
             id: `v-${Date.now()}`,
